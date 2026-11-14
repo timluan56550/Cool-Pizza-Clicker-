@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- got this dev tool from a friend because my school blocks inspect
+ <!-- got this dev tool from a friend because my school blocks inspect -->
     <script src="https://unpkg.com/eruda"></script>
-<script>eruda.init();</script> -->
+<script>eruda.init();</script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 user-scalable=no">
     <title>Click the Pizza!</title>
-    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./style.css">
+
+    <link rel="preload" href="images/pizza/pizza0.png" as="image">
+    <link rel="preload" href="images/pizza/pizza1.png" as="image">
+    <link rel="preload" href="images/pizza/pizza2.png" as="image">
+    <link rel="preload" href="images/pizza/pizza3.png" as="image">
+    <link rel="preload" href="images/pizza/pizza4.png" as="image">
+    <link rel="preload" href="images/pizza/pizza5.png" as="image">
+    <link rel="preload" href="images/pizza/pizza6.png" as="image">
+    <link rel="preload" href="images/pizza/pizza7.png" as="image">
+    <link rel="preload" href="images/pizza/pizza8.png" as="image">
+
 </head>
 
 <body>
@@ -42,13 +53,22 @@
     <div id="upgrade-info" style="display: none;"  draggable="false">   
 </div>
     <div id="upgrade-grid"></div>
-     </div>
+    <div id="rebirth-grid" style="display: none;"></div>
+    <button id="nextPageButton">Switch to Rebirths</button>
+
+
+</div>
     <!-- temporary button until i draw it -->
      <button id="closeNotepadButton" style="display:none;" draggable="false">X</button>
 
 </div>
 
 <!-- in order to use import and export (type="module")- SCRAPPED -->
+         <script src="scripts/rebirths.js"></script>
+
+     <script src="scripts/upgrades.js"></script>
+
     <script src="scripts/main.js"></script>
+
 </body>
 </html>

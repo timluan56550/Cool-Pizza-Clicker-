@@ -220,7 +220,7 @@ overflow: hidden;
     container-type: inline-size;
 position: absolute;
 top: 56%;
-bottom: 5%;
+bottom: 10%;
 left: 10%;
 right: 10%;
 display:flex;
@@ -240,7 +240,7 @@ border: 2px solid darkslategrey;
 border-radius: 4px;
 padding: 8px 8px;
 /* cqw Container query width( based of its container) remember to fix this because i dont think it works, i still dont udnerstand watch a tutorial later*/
-font-size:clamp(2px, 4cqw,14px);
+font-size:clamp(2px, 4cqmin,14px);
 font-family: "Press Start 2P", monospace;
 width:100%;
 max-width: 100%;
@@ -283,7 +283,7 @@ border-radius: 4px;
 padding: 10px 14px;
 
 font-family: "Press Start 2P";
-font-size: clamp(6px, 2.5cqw,14px);
+font-size: clamp(2px, 2cqmin,14px);
 text-align: center;
 z-index: 1;
 pointer-events: none;
@@ -353,4 +353,75 @@ border-radius: 8px;
 }
 #endScene.show{
     opacity: 1;
+}
+
+#rebirth-grid{
+    container-type: inline-size;
+    position: absolute;
+    top: 56%;
+    bottom: 5%;
+    left: 10%;
+    right: 10%;
+    flex-direction: column;
+    gap: 4px;
+    padding:4px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display:flex;
+}
+#nextPageButton{
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    font-family: "Press Start 2P";
+    font-size: calc(0.7vw + 0.7vh);
+    background-color: rgba(229, 225, 225, 0.437);
+    border: 2px solid darkslategrey;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#nextPageButton:hover{
+    background-color: white;
+    border-color: gold;
+}
+
+.rebirth-button{
+background-color:rgba(210, 132, 244, 0.437);
+border: 2px solid rgb(88, 39, 100);
+border-radius: 4px;
+padding: 8px 8px;
+/* cqw Container query width( based of its container) remember to fix this because i dont think it works, i still dont udnerstand watch a tutorial later*/
+font-size:clamp(5px, 6cqmin,40px);
+font-family: "Press Start 2P", monospace;
+width:100%;
+max-width: 100%;
+max-height: 70px;
+min-height: 40cqw;
+flex-shrink: 0;
+overflow: hidden;
+box-sizing: border-box;
+cursor: pointer;
+
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap:1vh;
+border-radius: 4px;
+
+
+
+
+}
+
+.rebirth-button:hover{
+    background-color: rgb(231, 213, 230);
+    border-color: gold;
+}
+.rebirth-button.maxed{
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color:rgba(133, 131, 131, 0.798);
 }

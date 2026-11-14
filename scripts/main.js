@@ -1,5 +1,5 @@
 
-let score=0;
+let score=100000000;
 let amountPerClick=1;
 let combo=0;
 let multiplier=1;
@@ -16,8 +16,10 @@ let critGainMultiplier=1;
 let critMultiplier=1;
 let powerGain=1;
 let amountPerClickBase=1;
-backgroundMusic.volume=0.07;
+let currentPage="upgrades";
+let currentRebirthIndex=0;
 
+backgroundMusic.volume=0.07;
 const pizzaImage=document.getElementById("pizza")
 const targetImage=document.getElementById("target")
 const scoreDisplay=document.getElementById("score")
@@ -41,230 +43,12 @@ const clickPizza=new Audio("audio/sound/clickPizza.mp3");
 const finishPizza=new Audio("audio/sound/finishPizza.mp3");
 const openNotepad=new Audio("audio/sound/openNotepad.mp3");
 
-
-const preloadPizza=[]
-//innerHtml is useful- do variableName.innerHtml="" remember to put "<span>, <b>, etc in quotations if it doesnt work"
-//block-make new line
-//inline block places on same line(doesnt break line)
-//list below is for upgrade may add more later if i need to but i think this is all i need use. use arrow function for required and effect
-//
-// id:
-// title:
-// info:
-// price:
-// maxCount:
-// currentCount:
-// growth:
-// required:
-// effect:
-//module.exports- makes teh array avaliable to any other file that requires this module
-//module.exports - doesnt work idk why
-const upgradeList=[
-    {
-id: '0',
-title: 'Extra Pizzas',
-info: 'Increase CpC Base by 1',
-price: 50,
-maxCount: 5,
-currentCount: 0,
-growth: 1.8,
-required: ()=> score>=0,
-effect: ()=> amountPerClickBase+=1
-},
-{
-id: '1',
-title: 'Combos',
-info:'Click the target button to stack combos',
-price: 100,
-maxCount: 1,
-currentCount: 0,
-growth: 1,
-required: ()=>upgradeList[0].currentCount>=2,
-effect: ()=>{
-    document.getElementById("target").style.display='block';
-      document.getElementById("comboText").style.display='inline-block';
-
-    moveTarget();
-}
-},
-{
-id: '2',
-title: 'Combo Lock',
-info:'Be able to freeze your combos to not lose them',
-price: 250,
-maxCount: 1,
-currentCount: 0,
-growth: 1,
-required: ()=>upgradeList[1].currentCount>=1,
-effect: ()=>{
-    document.getElementById("lockCombo").style.display='inline-block';
-}
-},
-{
-id: '3',
-title: 'Crispy Crits',
-info:'adds a 2% chance for every click to give you 4x Pizzas',
-price: 500,
-maxCount: 5,
-currentCount: 0,
-growth: 1.2,
-required: ()=>upgradeList[0].currentCount>=3,
-effect: ()=>{
-    critChance+=0.02;
-}
-
-},
-{
-id: '4',
-title: 'Combo AutoClicker',
-info:'Automatically clicks the target for you every 2 seconds',
-price: 350,
-maxCount: 1,
-currentCount: 0,
-growth: 1,
-required: ()=>upgradeList[1].currentCount>=1,
-effect: ()=>{
-    setInterval(()=>{
-        combo+=1;
-        multiplier=1+Math.log(1+combo*0.1*multiplierGrowth);
-        const gain=((3*amountPerClickBase*amountPerClick*multiplier*critMultiplier)**powerGain)
-        score+=gain;
-        const bottomY =pizzaImage.clientHeight+10;
-        spawnPopupStack("+"+gain.toFixed(1));
-        spawnFloatingText("Combo x" + combo, 0, bottomY, false, "stationary-combo");
-        updateUI();
-    },2000)
-    
-    
-}
-},
-{
-id: '5',
-title: 'Bigger Bonus',
-info:'Increases the reward for finishing a pizza by 1.4x per upgrade!',
-price: 200,
-maxCount: 10,
-currentCount: 0,
-growth: 1.45,
-required: ()=>upgradeList[0].currentCount>=3,
-effect: ()=>{
-    bonusPizza*=1.4;
-}
-
-},
-{
-id: '6',
-title: 'Better Combo Multiplier',
-info:'Slightly improves the formula for the Combo Multiplier',
-price: 700,
-maxCount: 5,
-currentCount: 0,
-growth: 1.9,
-required: ()=>upgradeList[2].currentCount>=1,
-effect: ()=>{
-    multiplierGrowth+=0.5;
-    multiplier=1+Math.log(1+combo*0.1*multiplierGrowth);
-    updateUI()
-
-}
-
-},
-{
-id: '7',
-title: 'XL Pizzas',
-info:'Multiplies the CpC by 1.3 per upgrade',
-price: 500,
-maxCount: 10,
-currentCount: 0,
-growth: 1.75,
-required: ()=>upgradeList[0].currentCount>=5,
-effect: ()=>{
-    amountPerClick*=1.3;
-}
-
-},
-{
-id: '8',
-title: 'More Powerful Crits',
-info:'Increases the multiplier for Crits by 1.5x per upgrade',
-price: 800,
-maxCount: 2,
-currentCount: 0,
-growth: 3,
-required: ()=>upgradeList[3].currentCount>=3,
-effect: ()=>{critGainMultiplier*=1.5
-
-}
-
-},
-{
-id: '9',
-title: 'Powerful Pizza',
-info:'Powers EVERYTHING by 1.1',
-price: 50000,
-maxCount: 1,
-currentCount: 0,
-growth: 1,
-required: ()=>upgradeList[7].currentCount>=5,
-effect: ()=>{powerGain+=0.1
-
-}
-
-},
-{
-id: '10',
-title: 'XL Bonus with Bonus',
-info:'1.7x Bonus Pizza AND 1.5x your CpC',
-price: 10000,
-maxCount: 4,
-currentCount: 0,
-growth: 4.8,
-required: ()=>upgradeList[5].currentCount>=10,
-effect: ()=>{bonusPizza*=1.7;
-amountPerClick*=1.5
-
-}
-
-},
-{
-id: '11',
-title: 'MORE CRIT CHAAAANCE',
-info:'Increase your crit chance by 5% per upgrade',
-price: 100000,
-maxCount: 3,
-currentCount: 0,
-growth: 5,
-required: ()=>upgradeList[3].currentCount>=5,
-effect: ()=>{critChance+=0.05;
-
-}
-
-},
+const nextPageButton=document.getElementById("nextPageButton");
+const upgradeGrid=document.getElementById("upgrade-grid");
+const rebirthGrid=document.getElementById("rebirth-grid");
 
 
 
-{
-id: '12',
-title: '10 Million Pizza',
-info:'You did it, you reached 10 million pizzas! You are a true pizza master yayayayaya! - Well once you have bought this upgrade',
-price: 10000000,
-maxCount: 1,
-currentCount: 0,
-growth: 1,
-required: ()=>upgradeList[9].currentCount>=1,
-effect: ()=>{
-    //trigger an end game cutscene
-    const endScene=document.getElementById("endScene")
- endScene.style.display="flex";
- setTimeout(()=>{
-    endScene.classList.add("show");
- },20);
-}
-
-},
-
-// end of upgrade list
-]
 //let the audio play multiple times overlapping
 function soundClick(){
 cloneSound=click.cloneNode();
@@ -282,6 +66,7 @@ clonePizza=clickPizza.cloneNode();
 clonePizza.volume=0.03;
 clonePizza.play();
 }
+
 function soundFinishPizza(a){
 cloneFinishPizza=finishPizza.cloneNode();
 cloneFinishPizza.volume=0.02;
@@ -294,16 +79,115 @@ cloneNotepad.volume=0.05;
 cloneNotepad.playbackRate=a;
 cloneNotepad.play();
 }
+
+
+nextPageButton.addEventListener("click",()=>{
+    soundOpenNotepad(1.5);
+    if(currentPage==="upgrades"){
+        currentPage="rebirths";
+        upgradeGrid.style.display="none";
+        rebirthGrid.style.display="flex";
+        nextPageButton.textContent="Switch to Upgrades";
+        openRebirth();
+
+    }else{
+        currentPage="upgrades";
+        upgradeGrid.style.display="flex";
+        rebirthGrid.style.display="none";
+        nextPageButton.textContent="Switch to Rebirths";
+        openUpgrade();
+    }
+})
+
+
+
+function openRebirth(){
+    const grid=document.getElementById("rebirth-grid");
+    //reset
+    grid.innerHTML="";
+const currentRebirth=rebirthList[currentRebirthIndex]
+
+
+    const rebirthButton=document.createElement("div");
+
+    rebirthButton.className="rebirth-button";
+    rebirthButton.innerHTML=
+    "<b>"+currentRebirth.title+"</b>"+
+    "<span> Cost: "+ currentRebirth.price + "</span>" +
+   "<span> Milestone: "+Number(currentRebirthIndex+1)+"</span>"
+    rebirthButton.addEventListener("click",()=>{
+        if(score>=currentRebirth.price){
+            soundClick();
+
+            const confirm=("Are you sure you want to rebirth? This will reset your score and upgrades.")
+            if(!confirm){
+                console.log("cancel")
+                return;
+            }
+            
+           rebirth();
+           currentRebirth.effect();
+            currentRebirthIndex+=1
+            updateUI();
+            openRebirth();
+        }else{
+            alert("You do not have enough score to rebirth.")
+        }
+    })
+rebirthButton.addEventListener("mouseenter",()=>{
+    info.style.display="block";
+    soundHoverOver();
+    info.innerHTML=
+    "<span>" + currentRebirth.info + "</span>"
+     })
+rebirthButton.addEventListener("mouseleave", ()=>{
+    info.style.display="none";
+    })
+    grid.appendChild(rebirthButton);
+}
+
+function rebirth(){
+     score=0;
+            amountPerClick=1;
+            combo=0;
+            multiplier=1;
+            isComboLocked=false;
+            critChance=0;
+            slicesEaten=0;
+            pizzasEaten=0;
+            isCooldown=false;
+            trackNumber=0;
+            bonusPizza=4;
+            multiplierGrowth=1;
+            critGainMultiplier=1;
+            critMultiplier=1;
+            powerGain=1;
+            amountPerClickBase=1;
+            upgradeList.forEach(upgrade=>{
+                upgrade.currentCount=0;
+                upgrade.price=upgrade.basePrice;
+            })
+            document.getElementById("comboText").style.display="none"
+            clearInterval(autoclick)
+            targetImage.style.display="none"
+            lockCombo.style.display="none"
+            
+}
 //this actualy turns th list into a lsit of upgrade when you open the nnotepad
 function openUpgrade(){
 const grid=document.getElementById("upgrade-grid");
 //clear everything so stuff dont duplicate
 grid.innerHTML=""
 //does this for every upgrade in the list
+
 upgradeList.forEach(upgrade=>{
 //if you have unlcoekd the upgrade, checker
-if(!upgrade.required())
+
+if(!upgrade.required()){
+
     return;
+}
+
 const maxed=upgrade.currentCount>=upgrade.maxCount;
 //be able to customize the box 
 const upgradeButton=document.createElement("div");
@@ -314,7 +198,6 @@ upgradeButton.innerHTML=
 "<b>"+upgrade.title+"</b>"+
 "<span> Cost: "+ upgrade.price + "</span>" +
 "<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"
-
 //when you click the upgrade
 upgradeButton.addEventListener("click", ()=>{
 if(maxed)
@@ -421,16 +304,11 @@ closeButtonNotepad.style.display='none';
 closedNotepad.style.display='block';
 soundOpenNotepad(2);
 });
-//stop pizza delays&lag
-for(let x=0; x<=8; x++) {
 
-    preloadPizza[x]=new Image();
-    preloadPizza[x].src=`images/pizza/pizza${x}.png`;
-}
 //move target
 function moveTarget(){
 //finds the pizza size
-    const pizzaWidth=pizzaImage.clientWidth>0?pizzaImage.clientWidth: 300;
+const pizzaWidth=pizzaImage.clientWidth>0?pizzaImage.clientWidth: 300;
 const pizzaHeight=pizzaImage.clientHeight>0?pizzaImage.clientHeight: 300;
 //finds the target size
 const targetWidth=targetImage.clientWidth>0?targetImage.clientWidth:40;
