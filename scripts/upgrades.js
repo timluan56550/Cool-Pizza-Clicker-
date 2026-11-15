@@ -85,16 +85,7 @@ currentCount: 0,
 growth: 1,
 required: ()=>upgradeList[1].currentCount>=1,
 effect: ()=>{
-    autoclick=setInterval(()=>{
-        combo+=1;
-        multiplier=1+Math.log(1+combo*0.1*multiplierGrowth);
-        const gain=((3*amountPerClickBase*amountPerClick*multiplier*critMultiplier)**powerGain)
-        score+=gain;
-        const bottomY =pizzaImage.clientHeight+10;
-        spawnPopupStack("+"+gain.toFixed(1));
-        spawnFloatingText("Combo x" + combo, 0, bottomY, false, "stationary-combo");
-        updateUI();
-    },2000)
+    startAutoComboClicker()
     
     
 }
@@ -208,28 +199,69 @@ effect: ()=>{critChance+=0.05;
 }
 
 },
-
-
-
 {
 id: '12',
-title: '10 Million Pizza',
-info:'You did it, you reached 10 million pizzas! You are a true pizza master yayayayaya! - Well once you have bought this upgrade',
-price: 10000000,
-maxCount: 1,
+title: 'More pizza, more pizza(er)',
+info:'Boost pizza gain based on your current score. Better formula per upgrade',
+price: 5000000,
+basePrice:5000000,
+maxCount: 3,
 currentCount: 0,
-growth: 1,
+growth: 1.5,
 required: ()=>upgradeList[9].currentCount>=1,
-effect: ()=>{
-    //trigger an end game cutscene
-    const endScene=document.getElementById("endScene")
- endScene.style.display="flex";
- setTimeout(()=>{
-    endScene.classList.add("show");
- },20);
+effect: ()=>{critChance+=0.05;
+
 }
 
 },
+{
+id: '13',
+title: 'Upgrade Up-Pizzas',
+info:'Boosts score gain by +2% for every total upgrade level you own. +1% per upgrade' ,
+price: 50000000,
+basePrice:50000000,
+maxCount: 4,
+currentCount: 0,
+growth: 1.8,
+required: ()=>currentRebirthIndex>=1&&upgradeList[11].currentCount>=3,
+effect: ()=>{totalUpgrades()
+}
+
+},
+{
+id: '14',
+title: 'Double Baked Pizza',
+info:'10% finishing a pizza gives you 5x bonus. +10% per upgrade' ,
+price: 155555555,
+basePrice:155555555,
+maxCount: 3,
+currentCount: 0,
+growth: 1.7,
+required: ()=>currentRebirthIndex>=2&&upgradeList[11].currentCount>=3,
+effect: ()=>{ doubleBakedChance+=0.1
+}
+
+},
+
+// {
+// id: '12',
+// title: '10 Million Pizza',
+// info:'You did it, you reached 10 million pizzas! You are a true pizza master yayayayaya! - Well once you have bought this upgrade',
+// price: 10000000,
+// maxCount: 1,
+// currentCount: 0,
+// growth: 1,
+// required: ()=>upgradeList[9].currentCount>=1,
+// effect: ()=>{
+//     //trigger an end game cutscene
+//     const endScene=document.getElementById("endScene")
+//  endScene.style.display="flex";
+//  setTimeout(()=>{
+//     endScene.classList.add("show");
+//  },20);
+// }
+
+// },
 
 // end of upgrade list
 ]

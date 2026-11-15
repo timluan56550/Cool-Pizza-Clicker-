@@ -1,5 +1,19 @@
 
-let score=100000000;
+const pizzaImages=[
+    "images/pizza/pizza8.png", "images/pizza/pizza7.png", "images/pizza/pizza6.png",
+    "images/pizza/pizza5.png", "images/pizza/pizza4.png", "images/pizza/pizza3.png",
+    "images/pizza/pizza2.png", "images/pizza/pizza1.png", "images/pizza/pizza0.png"
+]
+const permImage= pizzaImages.map(src=>{
+    const img=new Image();
+    img.src=src;
+    return img;
+})
+const imgArray=pizzaImages;
+
+
+
+let score=1000000;
 let amountPerClick=1;
 let combo=0;
 let multiplier=1;
@@ -16,8 +30,40 @@ let critGainMultiplier=1;
 let critMultiplier=1;
 let powerGain=1;
 let amountPerClickBase=1;
+let doubleBakedChance=0
+let popupColor=""
+
+
+
 let currentPage="upgrades";
 let currentRebirthIndex=0;
+
+//rebirth upgrades and vairables
+let pizzaCoins=1000
+let pizzaPassive=0;
+let permanentMultiplier=1
+let startingScore=0
+let autoClickerTime=2000
+let autoClickerTimer=null;
+let autoComboTime=1000;
+let autoComboTimer=null;
+let autoUpgradeTimer=null;
+function startScore(){
+score=startingScore
+}
+function calculateGain(multi=1){
+        const upgrade12=upgradeList.find(upgrade=>upgrade.id==="12")
+    const upgrade14=upgradeList.find(upgrade=>upgrade.id==="14")
+
+    let totalLevels=totalUpgrades()
+    let totalUpgradeBonus=1+(totalLevels*(0.02+(0.01*upgrade14.currentCount)))
+    let scoreSquared=1;
+    //find thes upgrade
+    if(upgrade12.currentCount>0 && score>1){
+        scoreSquared=1+(Math.log(score)*0.05*upgrade12.currentCount)
+    }
+    return ((totalUpgradeBonus*scoreSquared*permanentMultiplier*amountPerClickBase*amountPerClick*multiplier*critMultiplier*multi)**powerGain)
+}
 
 backgroundMusic.volume=0.07;
 const pizzaImage=document.getElementById("pizza")
@@ -27,6 +73,8 @@ const comboDisplay=document.getElementById("combo")
 const multiplierDisplay=document.getElementById("multiplier")
 const lockCombo=document.getElementById("lockCombo");
 const popupStack = document.getElementById("popup-Stack")
+const coinDisplay=document.getElementById("pizzaCoinsDisplay")
+
 // upgrade stuff
 //dont undersatnd why this didnt work
 //const upgradeList=require('./upgrades.js')
@@ -42,12 +90,21 @@ const hoverOver=new Audio("audio/sound/hoverOver.mp3");
 const clickPizza=new Audio("audio/sound/clickPizza.mp3");
 const finishPizza=new Audio("audio/sound/finishPizza.mp3");
 const openNotepad=new Audio("audio/sound/openNotepad.mp3");
+const refreshPizzaButton=document.getElementById("refresh")
 
 const nextPageButton=document.getElementById("nextPageButton");
 const upgradeGrid=document.getElementById("upgrade-grid");
 const rebirthGrid=document.getElementById("rebirth-grid");
+const coinGrid=document.getElementById("pizza-grid")
 
-
+refreshPizzaButton.addEventListener("click",()=>{
+    soundClick()
+    const currentSrc=imgArray[slicesEaten]||imgArray[0]
+    pizzaImage.src=""
+    setTimeout(()=>{
+        pizzaImage.src=currentSrc
+    },10)
+})
 
 //let the audio play multiple times overlapping
 function soundClick(){
@@ -87,13 +144,20 @@ nextPageButton.addEventListener("click",()=>{
         currentPage="rebirths";
         upgradeGrid.style.display="none";
         rebirthGrid.style.display="flex";
+        coinDisplay.style.display="block";
+        coinGrid.style.display="flex"
         nextPageButton.textContent="Switch to Upgrades";
+        openCoinShop()
         openRebirth();
 
     }else{
         currentPage="upgrades";
         upgradeGrid.style.display="flex";
         rebirthGrid.style.display="none";
+                coinDisplay.style.display="none";
+
+        coinGrid.style.display="none"
+
         nextPageButton.textContent="Switch to Rebirths";
         openUpgrade();
     }
@@ -103,33 +167,52 @@ nextPageButton.addEventListener("click",()=>{
 
 function openRebirth(){
     const grid=document.getElementById("rebirth-grid");
-    //reset
-    grid.innerHTML="";
+    grid.querySelectorAll(".rebirth-button").forEach(button=>button.remove());
 const currentRebirth=rebirthList[currentRebirthIndex]
+    //No more milestone left
+    if(!currentRebirth){
+        const completionMessage=document.createElement("div");
+        completionMessage.className="rebirth-button";
+        completionMessage.textContent="All rebirth milestones complete";
+        grid.appendChild(completionMessage);
+        return;
+    }
 
-
+    const preview =score>=1000000?("+"+(15*Math.sqrt(score/1000000)).toFixed(2)):"Reach amount to Rebirth"
     const rebirthButton=document.createElement("div");
 
     rebirthButton.className="rebirth-button";
     rebirthButton.innerHTML=
     "<b>"+currentRebirth.title+"</b>"+
-    "<span> Cost: "+ currentRebirth.price + "</span>" +
-   "<span> Milestone: "+Number(currentRebirthIndex+1)+"</span>"
+    "<span> Cost: "+ format.format(currentRebirth.price) + "</span>" +
+   "<span> "+preview+" Pizza Coins"+"</span>"
     rebirthButton.addEventListener("click",()=>{
         if(score>=currentRebirth.price){
             soundClick();
 
-            const confirm=("Are you sure you want to rebirth? This will reset your score and upgrades.")
-            if(!confirm){
+            if(!confirm("Are you sure you want to rebirth? This will reset your score and upgrades.")){
                 console.log("cancel")
                 return;
             }
-            
+            // base is 20, every 10x score gives you +20 currency
+            let bonusCoins=(25*Math.sqrt(score/1000000))
+            pizzaCoins+=bonusCoins
+
+            //every time you milstone reset, multiply passive by 2 base is 1
+            if(pizzaPassive===0){
+                pizzaPassive=1;
+            }else{
+                pizzaPassive*=2
+            }
+
+
            rebirth();
            currentRebirth.effect();
             currentRebirthIndex+=1
+            startScore()
             updateUI();
             openRebirth();
+            console.log("rebirthed")
         }else{
             alert("You do not have enough score to rebirth.")
         }
@@ -147,6 +230,7 @@ rebirthButton.addEventListener("mouseleave", ()=>{
 }
 
 function rebirth(){
+    screenShake()
      score=0;
             amountPerClick=1;
             combo=0;
@@ -168,91 +252,163 @@ function rebirth(){
                 upgrade.price=upgrade.basePrice;
             })
             document.getElementById("comboText").style.display="none"
-            clearInterval(autoclick)
+            clearInterval(autoComboTimer)
             targetImage.style.display="none"
             lockCombo.style.display="none"
+            lockCombo.src="images/unlock.png";
+
             
 }
 //this actualy turns th list into a lsit of upgrade when you open the nnotepad
 function openUpgrade(){
-const grid=document.getElementById("upgrade-grid");
-//clear everything so stuff dont duplicate
-grid.innerHTML=""
-//does this for every upgrade in the list
+    const grid=document.getElementById("upgrade-grid");
+    //clear everything so stuff dont duplicate
+    grid.innerHTML=""
+    //does this for every upgrade in the list
 
-upgradeList.forEach(upgrade=>{
-//if you have unlcoekd the upgrade, checker
+    upgradeList.forEach(upgrade=>{
+    //if you have unlcoekd the upgrade, checker
 
-if(!upgrade.required()){
+    if(!upgrade.required()){
 
-    return;
-}
-
-const maxed=upgrade.currentCount>=upgrade.maxCount;
-//be able to customize the box 
-const upgradeButton=document.createElement("div");
-//start to use more `${} isntead of + this check if maxed is true or not and will give an output of maxed or nothing
-upgradeButton.className=`upgrade-button ${maxed ? 'maxed' : ''}`;
-// make html and css for each item in the list without having to do it manually shows the title, price, etc
-upgradeButton.innerHTML=  
-"<b>"+upgrade.title+"</b>"+
-"<span> Cost: "+ upgrade.price + "</span>" +
-"<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"
-//when you click the upgrade
-upgradeButton.addEventListener("click", ()=>{
-if(maxed)
-    return;
-
-if(score>= upgrade.price){
-    soundClick();
-    //confirms the last upgrade
-if(upgrade.id==="12"){
-    const confirmEndGame=confirm("Do you want to beat the game and become a PIZZA MASTER?")
-    if(!confirmEndGame){
-        console.log("cancel")
         return;
     }
-    
 
+    const maxed=upgrade.currentCount>=upgrade.maxCount;
+    //be able to customize the box 
+    const upgradeButton=document.createElement("div");
+    //start to use more `${} isntead of + this check if maxed is true or not and will give an output of maxed or nothing
+    upgradeButton.className=`upgrade-button ${maxed ? 'maxed' : ''}`;
+    // make html and css for each item in the list without having to do it manually shows the title, price, etc
+    upgradeButton.innerHTML=  
+    "<b>"+upgrade.title+"</b>"+
+    "<span> Cost: "+ upgrade.price + "</span>" +
+    "<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"
+    //when you click the upgrade
+    upgradeButton.addEventListener("click", ()=>{
+        if(maxed){
+            return;
+         }
+         if(score>= upgrade.price){
+            soundClick();
+            //confirms the last upgrade
+            // if(upgrade.id==="12"){
+            //     const confirmEndGame=confirm("Do you want to beat the game and become a PIZZA MASTER?")
+            //         if(!confirmEndGame){
+            //             console.log("cancel")
+            //             return;
+            //         }
+            // }
+            //remove pizzas based on price
+            score-=upgrade.price;
+            //increase the count
+            upgrade.currentCount+=1;
+            //increase price
+            upgrade.price=Math.floor(upgrade.price*upgrade.growth);
+            //does the effect
+            upgrade.effect();
+            //update the ui;
+            updateUI();
+            //refreshed teh panel 
+            openUpgrade();
+         }
+    })
+    //hover over teh upgrade
+    upgradeButton.addEventListener("mouseenter",()=>{
+        if(!info)return;
+        info.style.display="block";
+        soundHoverOver();
+        //allows you to see inside basically
+        info.innerHTML=
+        "<span>" + upgrade.info + "</span>"
+     })
+
+    //not hovering over
+    upgradeButton.addEventListener("mouseleave", ()=>{
+        if(!info) return;
+        info.style.display="none";
+    });
+    grid.appendChild(upgradeButton)
+
+    })
 }
-//remove pizzas based on price
-score-=upgrade.price;
-//increase the count
-upgrade.currentCount+=1;
-//increase price
-upgrade.price=Math.floor(upgrade.price*upgrade.growth);
-//does the effect
-upgrade.effect();
-//update the ui;
-updateUI();
-//refreshed teh panel 
-openUpgrade();
-
-}
 
 
-})
-//hover over teh upgrade
-upgradeButton.addEventListener("mouseenter",()=>{
-if(!info)return;
-info.style.display="block";
-soundHoverOver();
-//allows you to see inside basically
-info.innerHTML=
-"<span>" + upgrade.info + "</span>"
- })
 
-//not hovering over
-upgradeButton.addEventListener("mouseleave", ()=>{
-if(!info) return;
-info.style.display="none";
+function openCoinShop(){
+    const grid=document.getElementById("pizza-grid");
+    grid.innerHTML="";
 
 
-});
-//adds teh button to the html/grid
-grid.appendChild(upgradeButton);
-});
-}
+
+    pizzaCoinUpgradeList.forEach(upgrade=>{
+        if(!upgrade.required()){
+            return;
+        }
+        const maxed=upgrade.currentCount>=upgrade.maxCount;
+        const upgradeButton=document.createElement("div");
+
+
+        upgradeButton.className=`pizza-button ${maxed ? 'maxed' : ''}`;
+
+
+        //auto upgrade, upgrade
+        if(upgrade.toggleable&&maxed){
+        upgradeButton.classList.add(upgrade.isActive ? "toggleOn":"toggleOff")
+
+        upgradeButton.innerHTML=  
+        "<b>"+upgrade.title+"</b>"+
+        "<span> "+ (upgrade.isActive ?"ON":"OFF") + "</span>" +
+        "<span>"+"(Click to Toggle)" +"</span>"
+        }else{
+            upgradeButton.innerHTML=  
+        "<b>"+upgrade.title+"</b>"+
+        "<span> Cost: "+ upgrade.price + "</span>" +
+        "<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"
+        }
+        
+        upgradeButton.addEventListener("click",()=>{
+            if(upgrade.toggleable&&maxed){
+                    soundClick()
+
+                //flipps it
+                    upgrade.isActive=!upgrade.isActive
+                    //refresh UI
+                    openCoinShop()
+                    return;
+            }
+            
+            if (maxed){
+                return;
+            }
+
+            if(pizzaCoins>=upgrade.price){
+            soundClick()
+            pizzaCoins-=upgrade.price;
+            upgrade.currentCount+=1;
+            upgrade.price=Math.floor(upgrade.price+upgrade.growth);
+            upgrade.effect();
+            updateUI();
+            openCoinShop()
+        }
+    })
+
+    upgradeButton.addEventListener("mouseenter",()=>{
+        if(!info)return;
+        info.style.display="block";
+        soundHoverOver()
+        info.innerHTML="<span>" + upgrade.info + "</span>"
+    })
+
+    upgradeButton.addEventListener("mouseleave", ()=>{
+        if(!info)return;
+        info.style.display="none"
+    })
+    grid.appendChild(upgradeButton)
+    })
+
+};
+
 
 
 //music
@@ -350,16 +506,24 @@ if (isComboLocked){
 
 
 //clicking the pizza
-pizzaImage.addEventListener("click", function(e) {
+pizzaImage.addEventListener("click", ()=>{
+pizzaClick(false)
+} )
+
+function pizzaClick(auto){
+
 
 if(isCooldown){
     return;
 }
+popupColor=""
+if(!auto){
 soundClickPizza();
 //check if it reset
 if(!isComboLocked) {
     combo=0;
 multiplier=1;
+}
 }
 //crit
 const isCrit=Math.random()<critChance;
@@ -368,16 +532,26 @@ if(isCrit){
 }else{
  critMultiplier=1;
 }
+
+
 slicesEaten+=1;
+slicesEaten=Math.max(0, Math.min(8,slicesEaten))
 //calculate the gain
-let gain=(amountPerClickBase*amountPerClick*multiplier*critMultiplier)**powerGain;
+let gain=calculateGain(1);
 
+pizzaImage.src=imgArray[slicesEaten]
 
-let slicesRemaining =8-slicesEaten;
-pizzaImage.src=`images/pizza/pizza${slicesRemaining}.png`
 //8 slices
 if(slicesEaten>=8){
 gain*= bonusPizza/(amountPerClick*amountPerClickBase);
+
+
+if(doubleBakedChance>0&&Math.random()<doubleBakedChance){
+    gain*=5
+    popupColor="#00FF98"
+}else{
+    popupColor="#e6cd12"
+}
 soundFinishPizza(0.8);
 pizzasEaten+=1;
 slicesEaten=0;
@@ -395,18 +569,19 @@ screenShake();
 }
 if(isCrit){
 
-spawnPopupStack("+"+gain.toFixed(1), "crit");
+spawnPopupStack("+"+formatShort.format(gain), "crit");
 screenShake();
 }else{
-  spawnPopupStack("+" + gain.toFixed(1));
+  spawnPopupStack("+" + formatShort.format(gain), "normal", popupColor);
 
 }
+
 score+=gain;
 updateUI();
-});
+};
 
 //popuptext on the right side
-function spawnPopupStack(text, type="normal"){
+function spawnPopupStack(text, type="normal", color=""){
     const popup=document.createElement("div");
     if(type==="crit"){
             popup.className="stackedPopup crit";
@@ -414,7 +589,9 @@ function spawnPopupStack(text, type="normal"){
     }else{
     popup.className="stackedPopup";
     }
-    
+    if(color){
+        popup.style.color=color
+    }
     popupStack.appendChild(popup)
     popup.textContent=text;
     setTimeout(() => {
@@ -452,12 +629,12 @@ if(!isComboLocked){
     combo+=1;
 multiplier=1+Math.log(1+combo*0.1*multiplierGrowth);
 
-const gain=(amountPerClickBase*amountPerClick*multiplier*critMultiplier*3)**powerGain
+const gain=calculateGain(3)
 score+=gain;
 const localX=targetImage.offsetLeft+e.offsetX;
 const localY=targetImage.offsetTop+e.offsetY;
 
-spawnPopupStack("+"+gain.toFixed(1));
+spawnPopupStack("+"+formatShort.format(gain), "normal", "#F93F3F");
 const bottomY =pizzaImage.clientHeight+10;
 
 spawnFloatingText("Combo x" + combo, 0, bottomY, false, "stationary-combo");
@@ -466,11 +643,130 @@ updateUI();
 }
 })
 //updates the ui like pizza score and other stuff
+
+
+setInterval(()=>{
+    if(pizzaPassive>0){
+        pizzaCoins+=pizzaPassive;
+        updateUI()
+    }
+},1000)
+
+//this formats large numbers into Million billion trillion, 
+const format=new Intl.NumberFormat("en-US",{
+    notation: "compact",
+    compactDisplay: "long",
+    maximumFractionDigits: 2
+})
+const formatShort=new Intl.NumberFormat("en-US",{
+    notation: "compact",
+    compactDisplay: "short",
+    maximumFractionDigits: 2
+})
+
+
+
+
+
+
+
+
+
+//these are the upgrades rebirth
+//for index 2 of rebirths 2nd array
+function startAutoBaker(){
+    clearInterval(autoClickerTimer)
+    autoClickerTimer=setInterval(() => {
+        const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.id==="3")
+        if(upgrade.currentCount>=upgrade.maxCount&&!upgrade.isActive){
+            return;
+        }
+        pizzaClick(true)
+    }, autoClickerTime);
+}
+
+function startAutoComboClicker(){
+    clearInterval(autoComboTimer)
+   
+    autoComboTimer=setInterval(()=>{
+         const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.id==="4")
+        if(upgrade.currentCount>=upgrade.maxCount&&!upgrade.isActive){
+            return;
+        }
+        combo+=1;
+        multiplier=1+Math.log(1+combo*0.1*multiplierGrowth);
+        const gain=calculateGain(3)
+        score+=gain;
+        const bottomY =pizzaImage.clientHeight+10;
+        spawnPopupStack("+"+(formatShort.format(gain)),"normal", "#F93F3F");
+        spawnFloatingText("Combo x" + combo, 0, bottomY, false, "stationary-combo");
+        updateUI();
+    }, autoComboTime)
+}
+
+
+
+
+
+
+function startAutoUpgrade(){
+    clearInterval(autoUpgradeTimer)
+    autoUpgradeTimer=setInterval(()=>{
+        const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.id==="5")
+        if(upgrade.currentCount>=upgrade.maxCount&&!upgrade.isActive){
+            return;
+        }
+        let cheapestUpgrade=null;
+        let lowestPrice=Infinity;
+
+        upgradeList.forEach(upgrade=>{
+            const maxed=upgrade.currentCount>=upgrade.maxCount
+            const unlocked=upgrade.required();
+
+            if (upgrade.price<lowestPrice){
+                if (!maxed&&unlocked){
+                lowestPrice=upgrade.price
+                cheapestUpgrade=upgrade;
+                }
+            }
+        })
+        if(cheapestUpgrade&& score>=cheapestUpgrade.price){
+            //subtract score, increase by 1, effect, and change price
+            score-=cheapestUpgrade.price
+            cheapestUpgrade.currentCount+=1
+            cheapestUpgrade.effect()
+            cheapestUpgrade.price=Math.floor(cheapestUpgrade.price*cheapestUpgrade.growth);
+            updateUI()
+            if(currentPage==="upgrades"){
+                openUpgrade()
+            }
+        }
+    },500)
+}
+
+
+function totalUpgrades(){
+    let total=0
+    upgradeList.forEach(upgrade=>{
+        total+=upgrade.currentCount
+    })
+    return total
+}
+
+
+
+
+
+
+
+
+
+
 function updateUI(){
-scoreDisplay.textContent=score.toFixed(1);
+scoreDisplay.textContent=format.format(score)
 comboDisplay.textContent=combo;
 multiplierDisplay.textContent=multiplier.toFixed(2);
 
-
-
+coinDisplay.textContent="Pizza Coins:"+(pizzaCoins.toFixed(2));
 }
+updateUI()

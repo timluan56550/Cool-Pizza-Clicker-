@@ -10,7 +10,7 @@
     <title>Click the Pizza!</title>
     <link rel="stylesheet" href="./style.css">
 
-    <link rel="preload" href="images/pizza/pizza0.png" as="image">
+    <!-- <link rel="preload" href="images/pizza/pizza0.png" as="image">
     <link rel="preload" href="images/pizza/pizza1.png" as="image">
     <link rel="preload" href="images/pizza/pizza2.png" as="image">
     <link rel="preload" href="images/pizza/pizza3.png" as="image">
@@ -18,7 +18,7 @@
     <link rel="preload" href="images/pizza/pizza5.png" as="image">
     <link rel="preload" href="images/pizza/pizza6.png" as="image">
     <link rel="preload" href="images/pizza/pizza7.png" as="image">
-    <link rel="preload" href="images/pizza/pizza8.png" as="image">
+    <link rel="preload" href="images/pizza/pizza8.png" as="image"> -->
 
 </head>
 
@@ -50,10 +50,13 @@
 <!-- open notpad stuff -->
 <div id="notepad-open-container" style="display:none;">
     <img id="notepad-open" class="notepad" src="images/upgrade/notepad_open.png"  draggable="false">
-    <div id="upgrade-info" style="display: none;"  draggable="false">   
-</div>
+    <div id="upgrade-info" style="display: none;"  draggable="false"> </div>
     <div id="upgrade-grid"></div>
     <div id="rebirth-grid" style="display: none;"></div>
+    <div id="pizzaCoinsDisplay" style="display: none;">Pizza Coins: 0</div>
+
+    <div id="pizza-grid" style="display: none;"></div>
+
     <button id="nextPageButton">Switch to Rebirths</button>
 
 
@@ -62,7 +65,7 @@
      <button id="closeNotepadButton" style="display:none;" draggable="false">X</button>
 
 </div>
-
+<button id="refresh">Refresh Pizza</button>"
 <!-- in order to use import and export (type="module")- SCRAPPED -->
          <script src="scripts/rebirths.js"></script>
 

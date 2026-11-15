@@ -233,6 +233,45 @@ overflow-x: hidden;
 
 
 }
+#pizza-grid{
+container-type: inline-size;
+position: absolute;
+top: 71%;
+bottom: 10%;
+left: 10%;
+right: 10%;
+display:flex;
+flex-direction: column;
+gap: 4px;
+padding:4px;
+/* border: 1px dashed black; */
+overflow-y: auto;
+overflow-x: hidden;
+
+}
+.pizza-button{
+    background-color:rgba(210, 132, 244, 0.437);
+border: 2px solid rgb(88, 39, 100);
+border-radius: 4px;
+padding: 8px 8px;
+/* cqw Container query width( based of its container) remember to fix this because i dont think it works, i still dont udnerstand watch a tutorial later*/
+font-size:clamp(2px, 4cqmin,14px);
+font-family: "Press Start 2P", monospace;
+width:100%;
+max-width: 100%;
+max-height: 70px;
+min-height: 20cqw;
+flex-shrink: 0;
+overflow: hidden;
+box-sizing: border-box;
+cursor: pointer;
+
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+gap:0.1vh;
+border-radius: 4px;
+}
 
 .upgrade-button{
 background-color:rgba(229, 225, 225, 0.437);
@@ -281,7 +320,6 @@ background: rgba(248, 247, 247, 0.927);
 border:2px solid gray;
 border-radius: 4px;
 padding: 10px 14px;
-
 font-family: "Press Start 2P";
 font-size: clamp(2px, 2cqmin,14px);
 text-align: center;
@@ -369,6 +407,16 @@ border-radius: 8px;
     overflow-x: hidden;
     display:flex;
 }
+#pizzaCoinsDisplay{
+    position: absolute;
+    top: 68%;
+    left: 10%;
+    right: 10%;
+    font-size: clamp(4px, 2cqmin,14px);
+    font-family: "Press Start 2P";
+
+
+}
 #nextPageButton{
     position: absolute;
     bottom: 5%;
@@ -388,12 +436,12 @@ border-radius: 8px;
 }
 
 .rebirth-button{
-background-color:rgba(210, 132, 244, 0.437);
+background-color:rgba(157, 24, 214, 0.437);
 border: 2px solid rgb(88, 39, 100);
 border-radius: 4px;
 padding: 8px 8px;
 /* cqw Container query width( based of its container) remember to fix this because i dont think it works, i still dont udnerstand watch a tutorial later*/
-font-size:clamp(5px, 6cqmin,40px);
+font-size:clamp(5px, 5cqmin,13px);
 font-family: "Press Start 2P", monospace;
 width:100%;
 max-width: 100%;
@@ -416,12 +464,33 @@ border-radius: 4px;
 
 }
 
-.rebirth-button:hover{
+.rebirth-button:hover, .pizza-button:hover{
     background-color: rgb(231, 213, 230);
     border-color: gold;
 }
-.rebirth-button.maxed{
+.rebirth-button.maxed, .pizza-button.maxed{
     opacity: 0.5;
     cursor: not-allowed;
     background-color:rgba(133, 131, 131, 0.798);
+}
+
+.toggleOn{
+    background-color: #5db983 !important; 
+        opacity: 1 !important;
+        align-items: center !important;
+
+        
+
+}
+.toggleOff{
+    background-color: #f51f1f !important;
+    opacity: 1 !important;
+    align-items: center !important;
+
+
+}
+#refresh{
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
 }
