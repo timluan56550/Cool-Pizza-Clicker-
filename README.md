@@ -22,3 +22,4 @@ Some features include -
     Automation - Inside the Pizza Coin/Rebirth shop, buy automation upgrades like auto clickers or auto buyers!
 
     Try to reach a goal of 1 Trillion Pizzas!
+    
