@@ -129,30 +129,29 @@ function calculateGain(multi=1){
 //let the audio play multiple times overlapping
 //SOUND AND MUSISC
 function soundClick(){
-cloneSound=click.cloneNode();
+const cloneSound=click.cloneNode();
 cloneSound.volume=0.1;
 cloneSound.play();
 }
 function soundHoverOver(){
-cloneHoverOver=hoverOver.cloneNode();
+const cloneHoverOver=hoverOver.cloneNode();
 cloneHoverOver.volume=0.1;
-
 cloneHoverOver.play();
 }
 function soundClickPizza(){
-clonePizza=clickPizza.cloneNode();
+const clonePizza=clickPizza.cloneNode();
 clonePizza.volume=0.03;
 clonePizza.play();
 }
 
 function soundFinishPizza(a){
-cloneFinishPizza=finishPizza.cloneNode();
+const cloneFinishPizza=finishPizza.cloneNode();
 cloneFinishPizza.volume=0.02;
 cloneFinishPizza.playbackRate=a;
 cloneFinishPizza.play();
 }
 function soundOpenNotepad(a){
-cloneNotepad=openNotepad.cloneNode();
+const cloneNotepad=openNotepad.cloneNode();
 cloneNotepad.volume=0.05;
 cloneNotepad.playbackRate=a;
 cloneNotepad.play();
@@ -244,23 +243,21 @@ soundOpenNotepad(2);
 
 //move target
 function moveTarget(){
-//finds the pizza size
-const pizzaWidth=pizzaImage.clientWidth>0?pizzaImage.clientWidth: 300;
-const pizzaHeight=pizzaImage.clientHeight>0?pizzaImage.clientHeight: 300;
-//finds the target size
-const targetWidth=targetImage.clientWidth>0?targetImage.clientWidth:40;
-const targetHeight=targetImage.clientHeight>0?targetImage.clientHeight:40;
-//finds the maximun areait can move
-const maxX = pizzaWidth - targetWidth;
-const maxY = pizzaHeight - targetHeight;
-//finds a random positotn
+if(!pizzaImage || !targetImage){
+    return;
+}
+
+const pizzaWidth = pizzaImage.clientWidth > 0 ? pizzaImage.clientWidth : 300;
+const pizzaHeight = pizzaImage.clientHeight > 0 ? pizzaImage.clientHeight : 300;
+const targetWidth = targetImage.clientWidth > 0 ? targetImage.clientWidth : 40;
+const targetHeight = targetImage.clientHeight > 0 ? targetImage.clientHeight : 40;
+const maxX = Math.max(0, pizzaWidth - targetWidth);
+const maxY = Math.max(0, pizzaHeight - targetHeight);
 const randomX = Math.random() * maxX;
 const randomY = Math.random() * maxY;
-//moves there
-targetImage.style.top=randomY+"px";
-targetImage.style.left=randomX+"px";
 
-
+targetImage.style.top = randomY + "px";
+targetImage.style.left = randomX + "px";
 }
 //satisfying screen shake
 function screenShake(){
@@ -418,6 +415,9 @@ const formatShort=new Intl.NumberFormat("en-US",{
 
 //popuptext on the left side
 function spawnPopupStack(text, type="normal", color=""){
+    if(!popupStack){
+        return;
+    }
     const popup=document.createElement("div");
     if(type==="crit"){
             popup.className="stackedPopup crit";
@@ -469,10 +469,17 @@ function spawnFloatingText(text, x,y, classes) {
 
 
 function updateUI(){
-scoreDisplay.textContent=format.format(score)
-comboDisplay.textContent=combo;
-multiplierDisplay.textContent=multiplier.toFixed(2);
-
-coinDisplay.textContent="Pizza Coins:"+(pizzaCoins.toFixed(2));
+if(scoreDisplay){
+    scoreDisplay.textContent=format.format(score)
+}
+if(comboDisplay){
+    comboDisplay.textContent=combo;
+}
+if(multiplierDisplay){
+    multiplierDisplay.textContent=multiplier.toFixed(2);
+}
+if(coinDisplay){
+    coinDisplay.textContent="Pizza Coins:"+(pizzaCoins.toFixed(2));
+}
 }
 updateUI()
