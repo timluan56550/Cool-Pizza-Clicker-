@@ -99,13 +99,27 @@ const permImage= pizzaImages.map(src=>{
     return img;
 })
     const imgArray=pizzaImages
+let refreshing=""
+let refreshing2=""
+let timeRefresh=0
 refreshPizzaButton.addEventListener("click",()=>{
 soundClick()
-pizzaImages.forEach(src=>{
-    const img=new Image();
-    img.src=src
-})
+clearInterval(refreshing)
+clearTimeout(refreshing2)
+    refreshing =setInterval(() => {
+        
+        pizzaImages.forEach(src=>{
+            const img=new Image();
+           img.src=src
+        })
+        timeRefresh+=3000
+    console.log("Refreshed: "+timeRefresh)
+    },3000);
 
+
+refreshing2 =setTimeout(()=>{
+    clearInterval(refreshing)
+},60000)
 })
 
 //let the audio play multiple times overlapping
@@ -565,7 +579,7 @@ soundFinishPizza(0.8);
 pizzasEaten+=1;
 slicesEaten=0;
 isCooldown=true;
-spawnFloatingText("✨PIZZA FORMED!✨",0,-30,true,"centered");
+spawnFloatingText("✨PIZZA FORMED!✨",0,-30,"crit centered");
 
 
 //cooldown for regen
@@ -612,23 +626,6 @@ function spawnPopupStack(text, type="normal", color=""){
 
 //popup text
 
-function spawnFloatingText(text, x,y, isSpecial=false, customStyle=""){
-const popup=document.createElement("div");
-popup.className = "popup-text" + (isSpecial ? " crit" : "") +(customStyle?" "+customStyle:"");
-popup.textContent=text;
-
-if(customStyle.includes("centered")||(customStyle.includes("stationary-combo"))){
-    popup.style.top=y+"px"
-
-}else{
-popup.style.left=x+"px"
-popup.style.top=y+"px"
-}
-document.getElementById("pizzaStuff").appendChild(popup);
-setTimeout(()=>{
-popup.remove();
-},1000);
-}
 
 
 //the target
@@ -646,11 +643,40 @@ const localY=targetImage.offsetTop+e.offsetY;
 spawnPopupStack("+"+formatShort.format(gain), "normal", "#F93F3F");
 const bottomY =pizzaImage.clientHeight+10;
 
-spawnFloatingText("Combo x" + combo, 0, bottomY, false, "stationary-combo");
+spawnFloatingText("Combo x" + combo, 0, bottomY, "stationary-combo");
 moveTarget();
 updateUI();
 }
 })
+
+let activeFloatingText=null;
+function spawnFloatingText(text, x,y, classes) {
+    const isCombo=classes.includes("stationary-combo")
+    //this removes teh previos one
+    if(isCombo&&activeFloatingText){
+        activeFloatingText.remove()
+    }
+const popup=document.createElement("div");
+popup.className = "popup-text " + classes;
+popup.textContent=text;
+popup.style.top=y+"px"
+
+if(!classes.includes("centered")&&!isCombo){
+popup.style.left=x+"px"
+}
+document.getElementById("pizzaStuff").appendChild(popup);
+if(isCombo){
+activeFloatingText=popup
+}
+setTimeout(()=>{
+popup.remove();
+//resets
+if(activeFloatingText===popup){
+    activeFloatingText=null;
+}
+},1000);
+}
+
 //updates the ui like pizza score and other stuff
 
 
@@ -708,7 +734,7 @@ function startAutoComboClicker(){
         score+=gain;
         const bottomY =pizzaImage.clientHeight+10;
         spawnPopupStack("+"+(formatShort.format(gain)),"normal", "#F93F3F");
-        spawnFloatingText("Combo x" + combo, 0, bottomY, false, "stationary-combo");
+        spawnFloatingText("Combo x" + combo, 0, bottomY,"stationary-combo");
         updateUI();
     }, autoComboTime)
 }

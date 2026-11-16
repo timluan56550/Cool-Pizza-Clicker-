@@ -107,6 +107,9 @@ filter: drop-shadow(0px 0px 8px gold);}
     left: -12vw;
     top: 10vh;
     width: 10vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     text-align: right;
     pointer-events: none;
 
