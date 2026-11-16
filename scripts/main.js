@@ -1,19 +1,9 @@
 
-const pizzaImages=[
-    "images/pizza/pizza8.png", "images/pizza/pizza7.png", "images/pizza/pizza6.png",
-    "images/pizza/pizza5.png", "images/pizza/pizza4.png", "images/pizza/pizza3.png",
-    "images/pizza/pizza2.png", "images/pizza/pizza1.png", "images/pizza/pizza0.png"
-]
-const permImage= pizzaImages.map(src=>{
-    const img=new Image();
-    img.src=src;
-    return img;
-})
-const imgArray=pizzaImages;
 
 
 
-let score=1000000;
+
+let score=0;
 let amountPerClick=1;
 let combo=0;
 let multiplier=1;
@@ -39,13 +29,13 @@ let currentPage="upgrades";
 let currentRebirthIndex=0;
 
 //rebirth upgrades and vairables
-let pizzaCoins=1000
+let pizzaCoins=0
 let pizzaPassive=0;
 let permanentMultiplier=1
 let startingScore=0
 let autoClickerTime=2000
 let autoClickerTimer=null;
-let autoComboTime=1000;
+let autoComboTime=2000;
 let autoComboTimer=null;
 let autoUpgradeTimer=null;
 function startScore(){
@@ -97,13 +87,25 @@ const upgradeGrid=document.getElementById("upgrade-grid");
 const rebirthGrid=document.getElementById("rebirth-grid");
 const coinGrid=document.getElementById("pizza-grid")
 
+
+const pizzaImages=[
+    "images/pizza/pizza8.png", "images/pizza/pizza7.png", "images/pizza/pizza6.png",
+    "images/pizza/pizza5.png", "images/pizza/pizza4.png", "images/pizza/pizza3.png",
+    "images/pizza/pizza2.png", "images/pizza/pizza1.png", "images/pizza/pizza0.png"
+]
+const permImage= pizzaImages.map(src=>{
+    const img=new Image();
+    img.src=src;
+    return img;
+})
+    const imgArray=pizzaImages
 refreshPizzaButton.addEventListener("click",()=>{
-    soundClick()
-    const currentSrc=imgArray[slicesEaten]||imgArray[0]
-    pizzaImage.src=""
-    setTimeout(()=>{
-        pizzaImage.src=currentSrc
-    },10)
+soundClick()
+pizzaImages.forEach(src=>{
+    const img=new Image();
+    img.src=src
+})
+
 })
 
 //let the audio play multiple times overlapping
@@ -282,8 +284,12 @@ function openUpgrade(){
     // make html and css for each item in the list without having to do it manually shows the title, price, etc
     upgradeButton.innerHTML=  
     "<b>"+upgrade.title+"</b>"+
-    "<span> Cost: "+ upgrade.price + "</span>" +
-    "<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"
+    "<span> Cost: "+ format.format(upgrade.price) + "</span>" +
+    "<div id='LevelandBuff'>"+
+    "<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"+
+    "<span style='color: green;'>"+totalBuff(upgrade)+"</span>"+
+    "</div>"
+
     //when you click the upgrade
     upgradeButton.addEventListener("click", ()=>{
         if(maxed){
@@ -364,7 +370,10 @@ function openCoinShop(){
             upgradeButton.innerHTML=  
         "<b>"+upgrade.title+"</b>"+
         "<span> Cost: "+ upgrade.price + "</span>" +
-        "<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"
+        "<div id='LevelandBuff'>"+
+        "<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"+
+        "<span style='color: green;'>"+totalBuff(upgrade)+"</span>"+
+        "</div>"
         }
         
         upgradeButton.addEventListener("click",()=>{
@@ -547,7 +556,7 @@ gain*= bonusPizza/(amountPerClick*amountPerClickBase);
 
 
 if(doubleBakedChance>0&&Math.random()<doubleBakedChance){
-    gain*=5
+    gain*=1000
     popupColor="#00FF98"
 }else{
     popupColor="#e6cd12"
@@ -647,10 +656,10 @@ updateUI();
 
 setInterval(()=>{
     if(pizzaPassive>0){
-        pizzaCoins+=pizzaPassive;
+        pizzaCoins+=pizzaPassive/25;
         updateUI()
     }
-},1000)
+},40)
 
 //this formats large numbers into Million billion trillion, 
 const format=new Intl.NumberFormat("en-US",{
@@ -744,7 +753,13 @@ function startAutoUpgrade(){
     },500)
 }
 
-
+function totalBuff(upgrade){
+    if(upgrade.currentCount===0||!upgrade.buff){
+        return "";
+    }
+    return upgrade.buff(upgrade.currentCount)
+    
+}
 function totalUpgrades(){
     let total=0
     upgradeList.forEach(upgrade=>{

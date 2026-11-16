@@ -24,7 +24,7 @@ const rebirthList= [
     },
      {
         title:'Third Rebirth',
-        info:'Resets your progress. Bonuses: 5x CpC, 4x Bonus Pizza, 4x Crits, 10% Crit chance <br>+4 Passive Pizza Coin Per Sec <br>UNLOCK CARDS',
+        info:'Resets your progress. Bonuses: 5x CpC, 4x Bonus Pizza, 4x Crits, 10% Crit chance <br>+4 Passive Pizza Coin Per Sec',
         price: 1000000000,
 
         effect: ()=>{
@@ -32,6 +32,18 @@ const rebirthList= [
             bonusPizza*=4;
             critGainMultiplier*=4;
             critChance+=0.1;
+        }
+    },
+    {
+        title:'Fourth Rebirth',
+        info:'Resets your progress. Bonuses: 8x CpC, 6x Bonus Pizza, 6x Crits, 15% Crit chance <br>+8 Passive Pizza Coin Per Sec',
+        price: 100000000000,
+
+        effect: ()=>{
+            amountPerClick*=8;
+            bonusPizza*=6;
+            critGainMultiplier*=6;
+            critChance+=0.15;
         }
     },
 ]
@@ -54,8 +66,8 @@ const pizzaCoinUpgradeList=[
         currentCount: 0,
         growth: 10,
         required: ()=> pizzaCoins>=0,
-        effect: ()=> permanentMultiplier+=0.1
-    
+        effect: ()=> permanentMultiplier+=0.1,
+        buff: (count)=>"+"+count*10+"%"
     },
     {
         id: '1',
@@ -72,7 +84,9 @@ const pizzaCoinUpgradeList=[
         }else{
             startingScore*=3
         }
-    }
+    },
+            buff: (count)=>formatShort.format(100*Math.pow(3,count-1))+" Pizzas"
+
 
 },
 
@@ -128,7 +142,7 @@ const pizzaCoinUpgradeList=[
     {
         id: '5',
         title: 'AUTOMATION: Upgrade buyer',
-        info: 'Automatically buys the cheapest upgrade. TOGGLEABLE',
+        info: 'Automatically buys the cheapest upgrade.',
         price: 100,
         basePrice:100,
         maxCount: 1,

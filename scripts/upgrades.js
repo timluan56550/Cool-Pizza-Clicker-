@@ -26,7 +26,8 @@ maxCount: 5,
 currentCount: 0,
 growth: 1.8,
 required: ()=> score>=0,
-effect: ()=> amountPerClickBase+=1
+effect: ()=> amountPerClickBase+=1,
+buff: (count)=>"+"+count+" Cpc"
 },
 {
 id: '1',
@@ -43,7 +44,8 @@ effect: ()=>{
       document.getElementById("comboText").style.display='inline-block';
 
     moveTarget();
-}
+},
+buff: (count)=>"Bought"
 },
 {
 id: '2',
@@ -57,7 +59,8 @@ growth: 1,
 required: ()=>upgradeList[1].currentCount>=1,
 effect: ()=>{
     document.getElementById("lockCombo").style.display='inline-block';
-}
+},
+buff: (count)=>"Bought"
 },
 {
 id: '3',
@@ -71,7 +74,8 @@ growth: 1.2,
 required: ()=>upgradeList[0].currentCount>=3,
 effect: ()=>{
     critChance+=0.02;
-}
+},
+buff: (count)=>"+"+count*2+"% Crit"
 
 },
 {
@@ -88,7 +92,8 @@ effect: ()=>{
     startAutoComboClicker()
     
     
-}
+},
+buff: (count)=>"Every "+(autoComboTime/1000)+"s"
 },
 {
 id: '5',
@@ -102,7 +107,8 @@ growth: 1.45,
 required: ()=>upgradeList[0].currentCount>=3,
 effect: ()=>{
     bonusPizza*=1.4;
-}
+},
+buff: (count)=>(Math.pow(1.4, count)).toFixed(2)+"x Bonus"
 
 },
 {
@@ -120,7 +126,8 @@ effect: ()=>{
     multiplier=1+Math.log(1+combo*0.1*multiplierGrowth);
     updateUI()
 
-}
+},
+buff: (count)=>"Bought "+count
 
 },
 {
@@ -135,7 +142,9 @@ growth: 1.75,
 required: ()=>upgradeList[0].currentCount>=5,
 effect: ()=>{
     amountPerClick*=1.3;
-}
+},
+buff: (count)=>(Math.pow(1.3, count)).toFixed(2)+"x CpC"
+
 
 },
 {
@@ -150,7 +159,9 @@ growth: 3,
 required: ()=>upgradeList[3].currentCount>=3,
 effect: ()=>{critGainMultiplier*=1.5
 
-}
+},
+buff: (count)=>(Math.pow(1.5, count)).toFixed(2)+"x Crits"
+
 
 },
 {
@@ -165,7 +176,9 @@ growth: 1,
 required: ()=>upgradeList[7].currentCount>=5,
 effect: ()=>{powerGain+=0.1
 
-}
+},
+buff: (count)=>"1.1"
+
 
 },
 {
@@ -181,7 +194,9 @@ required: ()=>upgradeList[5].currentCount>=10,
 effect: ()=>{bonusPizza*=1.7;
 amountPerClick*=1.5
 
-}
+},
+buff: (count)=>(Math.pow(1.7, count)).toFixed(2)+"x Bonus "+(Math.pow(1.5, count)).toFixed(2)+"x CpC"
+
 
 },
 {
@@ -196,13 +211,15 @@ growth: 5,
 required: ()=>upgradeList[3].currentCount>=5,
 effect: ()=>{critChance+=0.05;
 
-}
+},
+buff: (count)=>"+"+count*5+"% Chance"
+
 
 },
 {
 id: '12',
 title: 'More pizza, more pizza(er)',
-info:'Boost pizza gain based on your current score. Better formula per upgrade',
+info:'Boost pizza gain based on your current pizzas. Better formula per upgrade',
 price: 5000000,
 basePrice:5000000,
 maxCount: 3,
@@ -211,13 +228,15 @@ growth: 1.5,
 required: ()=>upgradeList[9].currentCount>=1,
 effect: ()=>{critChance+=0.05;
 
-}
+},
+buff: (count)=>"Bought "+count
+
 
 },
 {
 id: '13',
 title: 'Upgrade Up-Pizzas',
-info:'Boosts score gain by +2% for every total upgrade level you own. +1% per upgrade' ,
+info:'Boosts pizza gain by +2% for every total upgrade level you own. +1% per upgrade' ,
 price: 50000000,
 basePrice:50000000,
 maxCount: 4,
@@ -225,21 +244,24 @@ currentCount: 0,
 growth: 1.8,
 required: ()=>currentRebirthIndex>=1&&upgradeList[11].currentCount>=3,
 effect: ()=>{totalUpgrades()
-}
+},
+buff: (count)=>"+"+totalUpgrades()*(count+1)+"%"
 
 },
 {
 id: '14',
 title: 'Double Baked Pizza',
-info:'10% finishing a pizza gives you 5x bonus. +10% per upgrade' ,
+info:'5% finishing a pizza gives you 1000x bonus!. +5% per upgrade' ,
 price: 155555555,
 basePrice:155555555,
-maxCount: 3,
+maxCount: 4,
 currentCount: 0,
 growth: 1.7,
 required: ()=>currentRebirthIndex>=2&&upgradeList[11].currentCount>=3,
-effect: ()=>{ doubleBakedChance+=0.1
-}
+effect: ()=>{ doubleBakedChance+=0.05
+},
+buff: (count)=>count*5+"%"
+
 
 },
 
@@ -265,3 +287,4 @@ effect: ()=>{ doubleBakedChance+=0.1
 
 // end of upgrade list
 ]
+
