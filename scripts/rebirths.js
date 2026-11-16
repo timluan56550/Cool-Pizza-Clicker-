@@ -1,3 +1,232 @@
+//VARIBALES I HAVE TO PUT TO NOT GET ERROSs
+
+
+function startScore(){
+score=startingScore
+}
+
+
+function openRebirth(){
+    const grid=document.getElementById("rebirth-grid");
+    grid.querySelectorAll(".rebirth-button").forEach(button=>button.remove());
+    const currentRebirth=rebirthList[currentRebirthIndex]
+    //No more milestone left
+    if(!currentRebirth){
+        const completionMessage=document.createElement("div");
+        completionMessage.className="rebirth-button";
+        completionMessage.textContent="All rebirth milestones complete";
+        grid.appendChild(completionMessage);
+        return;
+    }
+
+    const preview =score>=1000000?("+"+(15*Math.sqrt(score/1000000)).toFixed(2)):"Reach amount to Rebirth"
+    const rebirthButton=document.createElement("div");
+
+    rebirthButton.className="rebirth-button";
+    rebirthButton.innerHTML=
+    "<b>"+currentRebirth.title+"</b>"+
+    "<span> Cost: "+ format.format(currentRebirth.price) + "</span>" +
+   "<span> "+preview+" Pizza Coins"+"</span>"
+    rebirthButton.addEventListener("click",()=>{
+        if(score>=currentRebirth.price){
+            soundClick();
+
+            if(!confirm("Are you sure you want to rebirth? This will reset your score and upgrades.")){
+                console.log("cancel")
+                return;
+            }
+            // base is 20, every 10x score gives you +20 currency
+            let bonusCoins=(25*Math.sqrt(score/1000000))
+            pizzaCoins+=bonusCoins
+
+            //every time you milstone reset, multiply passive by 2 base is 1
+            if(pizzaPassive===0){
+                pizzaPassive=1;
+            }else{
+                pizzaPassive*=2
+            }
+
+
+           rebirth();
+           currentRebirth.effect();
+            currentRebirthIndex+=1
+            startScore()
+            updateUI();
+            openRebirth();
+            console.log("rebirthed")
+        }else{
+            alert("You do not have enough score to rebirth.")
+        }
+    })
+rebirthButton.addEventListener("mouseenter",()=>{
+    info.style.display="block";
+    soundHoverOver();
+    info.innerHTML=
+    "<span>" + currentRebirth.info + "</span>"
+     })
+rebirthButton.addEventListener("mouseleave", ()=>{
+    info.style.display="none";
+    })
+    grid.appendChild(rebirthButton);
+}
+
+
+function rebirth(){
+    screenShake()
+     score=0;
+            amountPerClick=1;
+            combo=0;
+            multiplier=1;
+            isComboLocked=false;
+            critChance=0;
+            slicesEaten=0;
+            pizzasEaten=0;
+            isCooldown=false;
+            trackNumber=0;
+            bonusPizza=4;
+            multiplierGrowth=1;
+            critGainMultiplier=1;
+            critMultiplier=1;
+            powerGain=1;
+            amountPerClickBase=1;
+            upgradeList.forEach(upgrade=>{
+                upgrade.currentCount=0;
+                upgrade.price=upgrade.basePrice;
+            })
+            document.getElementById("comboText").style.display="none"
+            clearInterval(autoComboTimer)
+            targetImage.style.display="none"
+            lockCombo.style.display="none"
+            lockCombo.src="images/unlock.png";
+
+            
+}
+      
+
+
+function openCoinShop(){
+    const grid=document.getElementById("pizza-grid");
+    grid.innerHTML="";
+
+
+
+    pizzaCoinUpgradeList.forEach(upgrade=>{
+        if(!upgrade.required()){
+            return;
+        }
+        const maxed=upgrade.currentCount>=upgrade.maxCount;
+        const upgradeButton=document.createElement("div");
+
+
+        upgradeButton.className=`pizza-button ${maxed ? 'maxed' : ''}`;
+
+
+        //auto upgrade, upgrade
+        if(upgrade.toggleable&&maxed){
+        upgradeButton.classList.add(upgrade.isActive ? "toggleOn":"toggleOff")
+
+        upgradeButton.innerHTML=  
+        "<b>"+upgrade.title+"</b>"+
+        "<span> "+ (upgrade.isActive ?"ON":"OFF") + "</span>" +
+        "<span>"+"(Click to Toggle)" +"</span>"
+        }else{
+            upgradeButton.innerHTML=  
+        "<b>"+upgrade.title+"</b>"+
+        "<span> Cost: "+ upgrade.price + "</span>" +
+        "<div id='LevelandBuff'>"+
+        "<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"+
+        "<span style='color: green;'>"+totalBuff(upgrade)+"</span>"+
+        "</div>"
+        }
+        
+        upgradeButton.addEventListener("click",()=>{
+            if(upgrade.toggleable&&maxed){
+                    soundClick()
+
+                //flipps it
+                    upgrade.isActive=!upgrade.isActive
+                    //refresh UI
+                    openCoinShop()
+                    return;
+            }
+            
+            if (maxed){
+                return;
+            }
+
+            if(pizzaCoins>=upgrade.price){
+            soundClick()
+            pizzaCoins-=upgrade.price;
+            upgrade.currentCount+=1;
+            upgrade.price=Math.floor(upgrade.price+upgrade.growth);
+            upgrade.effect();
+            updateUI();
+            openCoinShop()
+        }
+    })
+
+    upgradeButton.addEventListener("mouseenter",()=>{
+        if(!info)return;
+        info.style.display="block";
+        soundHoverOver()
+        info.innerHTML="<span>" + upgrade.info + "</span>"
+    })
+
+    upgradeButton.addEventListener("mouseleave", ()=>{
+        if(!info)return;
+        info.style.display="none"
+    })
+    grid.appendChild(upgradeButton)
+    })
+
+};
+
+
+setInterval(()=>{
+    if(pizzaPassive>0){
+        pizzaCoins+=pizzaPassive/25;
+        updateUI()
+    }
+},40)
+
+//UPGRADES EFFECT
+
+
+function startAutoBaker(){
+    clearInterval(autoClickerTimer)
+    autoClickerTimer=setInterval(() => {
+        const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.id==="3")
+        if(upgrade.currentCount>=upgrade.maxCount&&!upgrade.isActive){
+            return;
+        }
+        pizzaClick(true)
+    }, autoClickerTime);
+}
+
+function startAutoComboClicker(){
+    clearInterval(autoComboTimer)
+   
+    autoComboTimer=setInterval(()=>{
+         const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.id==="4")
+        if(upgrade.currentCount>=upgrade.maxCount&&!upgrade.isActive){
+            return;
+        }
+        combo+=1;
+        multiplier=1+Math.log(1+combo*0.1*multiplierGrowth);
+        const gain=calculateGain(3)
+        score+=gain;
+        const bottomY =pizzaImage.clientHeight+10;
+        spawnPopupStack("+"+(formatShort.format(gain)),"normal", "#F93F3F");
+        spawnFloatingText("Combo x" + combo, 0, bottomY,"stationary-combo");
+        updateUI();
+    }, autoComboTime)
+}
+
+
+
+//UPGRADES AND MILESTONES
+
+
 const rebirthList= [
     {
         title:'First Rebirth',
@@ -151,7 +380,7 @@ const pizzaCoinUpgradeList=[
         toggleable:true,
         isActive:true,
         required: ()=> pizzaCoinUpgradeList[2].currentCount>=1,
-        effect: ()=> {autoUpgrade=true
+        effect: ()=> {
             startAutoUpgrade()
         }
     },

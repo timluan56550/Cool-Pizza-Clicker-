@@ -1,3 +1,121 @@
+  //this actualy turns th list into a lsit of upgrade when you open the nnotepad
+function openUpgrade(){
+    const grid=document.getElementById("upgrade-grid");
+    grid.innerHTML=""
+    upgradeList.forEach(upgrade=>{
+        if(!upgrade.required()){
+            return;
+        }  
+
+        const maxed=upgrade.currentCount>=upgrade.maxCount;
+        const upgradeButton=document.createElement("div");
+        upgradeButton.className=`upgrade-button ${maxed ? 'maxed' : ''}`;
+        upgradeButton.innerHTML=  
+            "<b>"+upgrade.title+"</b>"+
+            "<span> Cost: "+ format.format(upgrade.price) + "</span>" +
+            "<div id='LevelandBuff'>"+
+            "<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"+
+            "<span style='color: green;'>"+totalBuff(upgrade)+"</span>"+
+               "</div>"
+            
+        upgradeButton.addEventListener("click", ()=>{
+            if(maxed){
+                return;
+            }
+            if(score>= upgrade.price){
+                soundClick();
+                score-=upgrade.price;
+                upgrade.currentCount+=1;
+                upgrade.price=Math.floor(upgrade.price*upgrade.growth);
+                upgrade.effect();
+                updateUI();
+                openUpgrade();
+            } 
+        }) 
+        
+        upgradeButton.addEventListener("mouseenter",()=>{
+            if(!info){
+                return;
+            }
+            info.style.display="block";
+            soundHoverOver();
+            info.innerHTML=
+                "<span>" + upgrade.info + "</span>"
+        })
+    
+        upgradeButton.addEventListener("mouseleave", ()=>{
+            if(!info){
+                return;
+            }
+            info.style.display="none";
+        });
+        
+        grid.appendChild(upgradeButton)
+    })
+}
+
+
+
+
+function startAutoUpgrade(){
+    clearInterval(autoUpgradeTimer)
+    autoUpgradeTimer=setInterval(()=>{
+        const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.id==="5")
+        if(upgrade.currentCount>=upgrade.maxCount&&!upgrade.isActive){
+            return;
+        }
+
+        let cheapestUpgrade=null;
+        let lowestPrice=Infinity;
+
+        upgradeList.forEach(upgrade=>{
+            const maxed=upgrade.currentCount>=upgrade.maxCount
+            const unlocked=upgrade.required();
+
+            if (upgrade.price<lowestPrice){
+                if (!maxed&&unlocked){
+                lowestPrice=upgrade.price
+                cheapestUpgrade=upgrade;
+                }
+            }
+        })
+
+        if(cheapestUpgrade&& score>=cheapestUpgrade.price){
+            //subtract score, increase by 1, effect, and change price
+            score-=cheapestUpgrade.price
+            cheapestUpgrade.currentCount+=1
+            cheapestUpgrade.effect()
+            cheapestUpgrade.price=Math.floor(cheapestUpgrade.price*cheapestUpgrade.growth);
+            updateUI()
+            if(currentPage==="upgrades"){
+                openUpgrade()
+            }
+        }
+
+    },500)
+}
+
+
+
+function totalBuff(upgrade){
+    if(upgrade.currentCount===0||!upgrade.buff){
+        return "";
+    }
+    return upgrade.buff(upgrade.currentCount)
+    
+}
+
+
+
+function totalUpgrades(){
+    let total=0
+    upgradeList.forEach(upgrade=>{
+        total+=upgrade.currentCount
+    })
+    return total
+}
+
+
 //innerHtml is useful- do variableName.innerHtml="" remember to put "<span>, <b>, etc in quotations if it doesnt work"
 //block-make new line
 //inline block places on same line(doesnt break line)
@@ -12,9 +130,9 @@
 // growth:
 // required:
 // effect:
+// buff:
 //module.exports- makes teh array avaliable to any other file that requires this module
 //module.exports - doesnt work idk why
-let autoclick=null;
 const upgradeList=[
     {
 id: '0',
@@ -226,9 +344,7 @@ maxCount: 3,
 currentCount: 0,
 growth: 1.5,
 required: ()=>upgradeList[9].currentCount>=1,
-effect: ()=>{critChance+=0.05;
-
-},
+effect: ()=>{},
 buff: (count)=>"Bought "+count
 
 
