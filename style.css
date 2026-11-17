@@ -420,23 +420,7 @@ border-radius: 8px;
 
 
 }
-#nextPageButton{
-    position: absolute;
-    bottom: 5%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 8px 16px;
-    font-family: "Press Start 2P";
-    font-size: calc(0.7vw + 0.7vh);
-    background-color: rgba(229, 225, 225, 0.437);
-    border: 2px solid darkslategrey;
-    border-radius: 4px;
-    cursor: pointer;
-}
-#nextPageButton:hover{
-    background-color: white;
-    border-color: gold;
-}
+
 
 .rebirth-button{
 background-color:rgba(157, 24, 214, 0.437);
@@ -501,4 +485,128 @@ border-radius: 4px;
     display: flex;
     justify-content: space-between;
     width: 100%;
+}
+.automation-button{
+background-color:rgba(174, 85, 138, 0.437);
+border: 2px solid rgb(85, 48, 49);
+}
+#notepad-tab{
+    overflow-x: auto;
+    white-space: nowrap;
+    position: absolute;
+    bottom: 4%;
+    left: 15%;
+    right: 15%;
+    display: flex;
+    gap: 4px;
+}
+
+.tab-button{
+    padding: 8px 5px;
+   font-size:clamp(2px, 1.2cqmin,30px);
+font-family: "Press Start 2P", monospace;
+width:58cqw;
+
+height: 6cqh;
+     background-color: rgba(229, 225, 225, 0.437);
+    border: 2px solid darkslategrey;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.tab-button:hover{
+    background-color: white;
+    border-color: gold;
+} 
+.tab-button.locked{
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color:rgba(133, 131, 131, 0.798);
+}
+.tab-button.active{
+    background-color: rgb(236, 220, 131);
+    border:2.5px solid rgb(8, 8, 7);
+
+}
+/* #milestone-page{
+    position: absolute;
+    top: 15%;
+} */
+
+#milestone-grid{
+container-type: inline-size;
+position: absolute;
+top: 56%;
+bottom: 10%;
+left: 50%;
+right: 10%;
+display:flex;
+flex-direction: column;
+gap: 4px;
+padding:4px;
+/* border: 1px dashed black; */
+overflow-y: auto;
+overflow-x: hidden;
+
+
+}
+
+#milestone-bar{
+position: absolute;
+top: 57%;
+bottom: 10%;
+left: 13%;
+width: 30%;
+
+
+border: 1px dashed black;
+border-radius: 14px;
+overflow-y: auto;
+overflow-x: hidden;
+}
+
+
+#milestone-tower{
+    width: 100%;
+    /* 1 start x body 1 end */
+aspect-ratio: 1/32;
+}
+#bar-fill{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+#bar-start{
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+    background-image: url("https://placehold.co/32x32/green/black/");
+    background-size: 100% 100%;
+    image-rendering: pixelated;
+image-rendering: crisp-edges;
+flex-shrink: 0;
+
+}
+#bar-middle{
+    width: 100%;
+    flex-grow: 1;
+    background-image: url("https://placehold.co/32x32/blue/black/");
+background-size: 100% auto;
+background-repeat: no-repeat round;
+
+image-rendering: pixelated;
+image-rendering: crisp-edges;
+}
+#bar-end{
+    width: 100%;
+    height: auto;
+        aspect-ratio: 1/1;
+
+    background-image: url("https://placehold.co/32x32/red/black/");
+    background-size: 100% 100%;
+    image-rendering: pixelated;
+image-rendering: crisp-edges;
+flex-shrink: 0;
+
 }

@@ -117,8 +117,13 @@ function openCoinShop(){
         const maxed=upgrade.currentCount>=upgrade.maxCount;
         const upgradeButton=document.createElement("div");
 
+        if (upgrade.title.includes("AUTOMATION")) {
+                    upgradeButton.className=`pizza-button automation-button ${maxed ? 'maxed' : ''}`;
 
-        upgradeButton.className=`pizza-button ${maxed ? 'maxed' : ''}`;
+        }else{
+                    upgradeButton.className=`pizza-button ${maxed ? 'maxed' : ''}`;
+
+        }
 
 
         //auto upgrade, upgrade
@@ -189,13 +194,16 @@ setInterval(()=>{
     }
 },40)
 
+
+
+
 //UPGRADES EFFECT
 
 
 function startAutoBaker(){
     clearInterval(autoClickerTimer)
     autoClickerTimer=setInterval(() => {
-        const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.id==="3")
+        const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.title==="AUTOMATION: Auto Baker")
         if(upgrade.currentCount>=upgrade.maxCount&&!upgrade.isActive){
             return;
         }
@@ -207,7 +215,7 @@ function startAutoComboClicker(){
     clearInterval(autoComboTimer)
    
     autoComboTimer=setInterval(()=>{
-         const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.id==="4")
+         const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.title==="AUTOMATION: Combo Assist")
         if(upgrade.currentCount>=upgrade.maxCount&&!upgrade.isActive){
             return;
         }
@@ -222,7 +230,43 @@ function startAutoComboClicker(){
     }, autoComboTime)
 }
 
+function startAutoUpgrade(){
+    clearInterval(autoUpgradeTimer)
+    autoUpgradeTimer=setInterval(()=>{
+        const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.title==="AUTOMATION: Upgrade buyer")
+        if(upgrade.currentCount>=upgrade.maxCount&&!upgrade.isActive){
+            return;
+        }
 
+        let cheapestUpgrade=null;
+        let lowestPrice=Infinity;
+
+        upgradeList.forEach(upgrade=>{
+            const maxed=upgrade.currentCount>=upgrade.maxCount
+            const unlocked=upgrade.required();
+
+            if (upgrade.price<lowestPrice){
+                if (!maxed&&unlocked){
+                lowestPrice=upgrade.price
+                cheapestUpgrade=upgrade;
+                }
+            }
+        })
+
+        if(cheapestUpgrade&& score>=cheapestUpgrade.price){
+            //subtract score, increase by 1, effect, and change price
+            score-=cheapestUpgrade.price
+            cheapestUpgrade.currentCount+=1
+            cheapestUpgrade.effect()
+            cheapestUpgrade.price=Math.floor(cheapestUpgrade.price*cheapestUpgrade.growth);
+            updateUI()
+            if(currentPage==="upgrades"){
+                openUpgrade()
+            }
+        }
+
+    },500)
+}
 
 //UPGRADES AND MILESTONES
 
@@ -317,10 +361,29 @@ const pizzaCoinUpgradeList=[
             buff: (count)=>formatShort.format(100*Math.pow(3,count-1))+" Pizzas"
 
 
+},   {
+        id: '2',
+        title: 'TEMPORARY',
+        info: 'Start every rebirth with 100 Pizzas, 3x per upgrade,',
+        price: 5,
+        basePrice:5,
+        maxCount: 8,
+        currentCount: 0,
+        growth: 5,
+        required: ()=> pizzaCoins>=0,
+        effect: ()=> {if (startingScore===0){
+            startingScore=100
+        }else{
+            startingScore*=3
+        }
+    },
+            buff: (count)=>formatShort.format(100*Math.pow(3,count-1))+" Pizzas"
+
+
 },
 
 {
-        id: '2',
+        id: '3',
         title: 'AUTOMATION:',
         info: 'Unlock automation',
         price: 0,
@@ -333,7 +396,7 @@ const pizzaCoinUpgradeList=[
         }
     },
 {
-        id: '3',
+        id: '4',
         title: 'AUTOMATION: Auto Baker',
         info: 'Automatically clicks the pizza every second, 2x speed per upgrade',
         price: 40,
@@ -343,13 +406,13 @@ const pizzaCoinUpgradeList=[
         growth: 30,
         toggleable:true,
         isActive:true,
-        required: ()=> pizzaCoinUpgradeList[2].currentCount>=1,
+        required: ()=> pizzaCoinUpgradeList[3].currentCount>=1,
         effect: ()=> {autoClickerTime*=0.5
         startAutoBaker()
         }
     },
     {
-        id: '4',
+        id: '5',
         title: 'AUTOMATION: Combo Assist',
         info: 'Increases the speed of the Combo autoclicker by 2x per upgrade',
         price: 50,
@@ -359,7 +422,7 @@ const pizzaCoinUpgradeList=[
         growth: 50,
         toggleable:true,
         isActive:true,
-        required: ()=> pizzaCoinUpgradeList[2].currentCount>=1,
+        required: ()=> pizzaCoinUpgradeList[3].currentCount>=1,
         effect: ()=> {
             autoComboTime*=0.5
             if(upgradeList[4].currentCount>0){
@@ -369,7 +432,7 @@ const pizzaCoinUpgradeList=[
             
     },
     {
-        id: '5',
+        id: '6',
         title: 'AUTOMATION: Upgrade buyer',
         info: 'Automatically buys the cheapest upgrade.',
         price: 100,
@@ -379,7 +442,7 @@ const pizzaCoinUpgradeList=[
         growth: 1,
         toggleable:true,
         isActive:true,
-        required: ()=> pizzaCoinUpgradeList[2].currentCount>=1,
+        required: ()=> pizzaCoinUpgradeList[3].currentCount>=1,
         effect: ()=> {
             startAutoUpgrade()
         }

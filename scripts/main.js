@@ -102,7 +102,6 @@ const clickPizza=new Audio("audio/sound/clickPizza.mp3");
 const finishPizza=new Audio("audio/sound/finishPizza.mp3");
 const openNotepad=new Audio("audio/sound/openNotepad.mp3");
 //inside the notepad ui
-const nextPageButton=document.getElementById("nextPageButton");
 const upgradeGrid=document.getElementById("upgrade-grid");
 const rebirthGrid=document.getElementById("rebirth-grid");
 const coinGrid=document.getElementById("pizza-grid")
@@ -185,51 +184,25 @@ if(backgroundMusic.paused && backgroundMusic.src===""){
 
 
 
-
-
-nextPageButton.addEventListener("click",()=>{
-    soundOpenNotepad(1.5);
-    if(currentPage==="upgrades"){
-        currentPage="rebirths";
-        upgradeGrid.style.display="none";
-        rebirthGrid.style.display="flex";
-        coinDisplay.style.display="block";
-        coinGrid.style.display="flex"
-        nextPageButton.textContent="Switch to Upgrades";
-        openCoinShop()
-        openRebirth();
-
-    }else{
-        currentPage="upgrades";
-        upgradeGrid.style.display="flex";
-        rebirthGrid.style.display="none";
-                coinDisplay.style.display="none";
-
-        coinGrid.style.display="none"
-
-        nextPageButton.textContent="Switch to Rebirths";
-        openUpgrade();
-    }
-})
-
-
-
-
-
-
-
-
-
-
 // open/close the notepad
 closedNotepad.addEventListener('click',()=>{
+//sets activeTab to tab id if it is teh current page. The first time it will be upgrades
 closedNotepad.style.display='none';
 openNotepadContainer.style.display='block';
 closeButtonNotepad.style.display='block';
-//debug test
-console.log("you have opened the notepad");
-soundOpenNotepad(1.5);
-openUpgrade();
+soundOpenNotepad(1.5)
+
+upgradeGrid.style.display="none";
+rebirthGrid.style.display ="none";
+coinGrid.style.display ="none";
+coinDisplay.style.display ="none";
+milestoneBar.style.display="none"
+milestoneGrid.style.display="none";
+
+const activeTab= tabButtons.find(tab=>tab.id===currentPage)||tabButtons[0]
+currentPage=activeTab.id
+activeTab.clicked()
+openTabs()
 });
 
 closeButtonNotepad.addEventListener('click',()=>{

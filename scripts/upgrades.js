@@ -57,43 +57,7 @@ function openUpgrade(){
 
 
 
-function startAutoUpgrade(){
-    clearInterval(autoUpgradeTimer)
-    autoUpgradeTimer=setInterval(()=>{
-        const upgrade=pizzaCoinUpgradeList.find(upgrade=>upgrade.id==="5")
-        if(upgrade.currentCount>=upgrade.maxCount&&!upgrade.isActive){
-            return;
-        }
 
-        let cheapestUpgrade=null;
-        let lowestPrice=Infinity;
-
-        upgradeList.forEach(upgrade=>{
-            const maxed=upgrade.currentCount>=upgrade.maxCount
-            const unlocked=upgrade.required();
-
-            if (upgrade.price<lowestPrice){
-                if (!maxed&&unlocked){
-                lowestPrice=upgrade.price
-                cheapestUpgrade=upgrade;
-                }
-            }
-        })
-
-        if(cheapestUpgrade&& score>=cheapestUpgrade.price){
-            //subtract score, increase by 1, effect, and change price
-            score-=cheapestUpgrade.price
-            cheapestUpgrade.currentCount+=1
-            cheapestUpgrade.effect()
-            cheapestUpgrade.price=Math.floor(cheapestUpgrade.price*cheapestUpgrade.growth);
-            updateUI()
-            if(currentPage==="upgrades"){
-                openUpgrade()
-            }
-        }
-
-    },500)
-}
 
 
 
