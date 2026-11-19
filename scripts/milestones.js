@@ -35,7 +35,7 @@ function updatePizzaStack(){
     for (let x=1; x<=totalBoxes; x++){
     const ratio=x/totalBoxes
     //max*ratio^inverse
-    const pizzaRate=1000*Math.pow(ratio, 1/0.73)
+    const pizzaRate=10000*Math.pow(ratio, 1/0.55)
     const bottom=(x-1)*10
         //[index='x']
         let existingBox=towerStack.querySelector("[index='"+x+"']")
@@ -79,13 +79,23 @@ milestoneList.forEach(milestone=>{
     row.className="milestoneRow"
     dash.className="milestone-dash"
 
-    row.style.top=milestonePosition(milestone.requirement, 1000)
+    row.style.top=milestonePosition(milestone.requirement, 10000)
     //adds dash to the row
     row.appendChild(dash)
     row.appendChild(button)
     milestoneTower.appendChild(row)
+
+    button.className="milestone-button"
+
+    const title=document.createElement("span")
+    const status=document.createElement("span")
+    title.textContent=milestone.title
+    status.className="milestone-status"
+
+    button.appendChild(title)
+    button.appendChild(status)
     //this saves it so we can use it in antoerh function
-    milestoneSave[milestone.id]={button, milestone}
+    milestoneSave[milestone.id]={button, status, milestone}
     
     
     
@@ -127,7 +137,7 @@ function updateMilestoneUI(){
     milestoneList.forEach(milestone=>{
     //transfer varibles
     const save=milestoneSave[milestone.id]
-    const {button}=save
+    const {button, status}=save
     
     const reached=pizzasEaten>=milestone.requirement
     const claimable= reached && !milestone.claimed;
@@ -139,21 +149,19 @@ function updateMilestoneUI(){
         button.classList.add("claim")
     }
 
-    let status=pizzasEaten+"/"+milestone.requirement
+    let statusNow=pizzasEaten+"/"+milestone.requirement
     if(milestone.claimed){
-        status="CLAIMED"
+        statusNow="CLAIMED"
     }else if(claimable){
-        status="CLAIM"
+        statusNow="CLAIM"
     }
-    button.innerHTML=
-    "<b>"+milestone.title+"</b>"+
-    "<span>"+status+"</span>"
-    })
+    status.textContent=statusNow
+})
 }
 
 function milestonePosition(requirement, maxRequirement){   
     //sqrt but i can edit the formula
-    const ratio=Math.pow(requirement/maxRequirement, 0.73)
+    const ratio=Math.pow(requirement/maxRequirement, 0.55)
     const percentage=(1-ratio)*100;
     return percentage+"%"
 }
@@ -162,8 +170,8 @@ const milestoneList =[
 {
     id:"0",
     title:'Pizza I',
-    requirement: 25,
-    info: "Reach 25 Full Pizzas.<br>Bonuses: <br>1 Passive Pizza Box Coin.<br>1.5x Pizzas",
+    requirement: 50,
+    info: "Reach 50 Full Pizzas.<br>Bonuses: <br>1 Passive Pizza Box Coin.<br>1.5x Pizzas",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=1;
@@ -173,8 +181,8 @@ const milestoneList =[
     {
     id:"1",
     title:'Pizza II',
-    requirement: 50,
-    info: "Reach 50 Full Pizzas.<br>Bonuses: <br>2 Passive Pizza Box Coin.<br>2x Pizzas<br>1.5x Pizza Coins",
+    requirement: 125,
+    info: "Reach 125 Full Pizzas.<br>Bonuses: <br>2 Passive Pizza Box Coin.<br>2x Pizzas<br>1.5x Pizza Coins",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=1;
@@ -185,8 +193,8 @@ const milestoneList =[
     {
     id:"2",
     title:'Pizza III',
-    requirement: 100,
-    info: "Reach 100 Full Pizzas.<br>Bonuses: <br>4 Passive Pizza Box Coin.<br>3x Pizzas<br>2x Pizza Coins",
+    requirement: 250,
+    info: "Reach 250 Full Pizzas.<br>Bonuses: <br>4 Passive Pizza Box Coin.<br>3x Pizzas<br>2x Pizza Coins",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=2;
@@ -197,8 +205,8 @@ const milestoneList =[
      {
     id:"3",
     title:'Pizza IV',
-    requirement: 150,
-    info: "Reach 150 Full Pizzas.<br>Bonuses: <br>8 Passive Pizza Box Coin.<br>5x Pizzas<br>5x Bonus Pizza<br>3x Pizza Coins<br>",
+    requirement: 500,
+    info: "Reach 500 Full Pizzas.<br>Bonuses: <br>8 Passive Pizza Box Coin.<br>5x Pizzas<br>5x Bonus Pizza<br>3x Pizza Coins<br>",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=4;
@@ -210,8 +218,8 @@ const milestoneList =[
      {
     id:"4",
     title:'Pizza V',
-    requirement: 250,
-    info: "Reach 250 Full Pizzas.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>10x Pizzas<br>8x Bonus Pizza<br>5x Pizza Coins<br>Power +0.05",
+    requirement: 1000,
+    info: "Reach 1000 Full Pizzas.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>10x Pizzas<br>8x Bonus Pizza<br>5x Pizza Coins<br>Power +0.05",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=12;
@@ -220,7 +228,74 @@ const milestoneList =[
         pizzaCoinMultiplier=5
         powerGain+=0.05
     }
+    },
+    {
+    id:"5",
+    title:'Pizza VI',
+    requirement: 2000,
+    info: "Reach 2000 Full Pizzas.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>10x Pizzas<br>8x Bonus Pizza<br>5x Pizza Coins<br>Power +0.05",
+    claimed: false,
+    effect: ()=>{
+        passivePizzaBoxCoins+=12;
+        bonusPizzaMultiplier=8
+        milestoneMultiplier=10
+        pizzaCoinMultiplier=5
+        powerGain+=0.05
     }
+    },
+    {
+    id:"6",
+    title:'Pizza VII',
+    requirement: 3500,
+    info: "Reach 3500 Full Pizzas.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>10x Pizzas<br>8x Bonus Pizza<br>5x Pizza Coins<br>Power +0.05",
+    claimed: false,
+    effect: ()=>{
+        passivePizzaBoxCoins+=12;
+        bonusPizzaMultiplier=8
+        milestoneMultiplier=10
+        pizzaCoinMultiplier=5
+        powerGain+=0.05
+    }
+    },{
+    id:"7",
+    title:'Pizza VIII',
+    requirement: 5000,
+    info: "Reach 5000 Full Pizzas.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>10x Pizzas<br>8x Bonus Pizza<br>5x Pizza Coins<br>Power +0.05",
+    claimed: false,
+    effect: ()=>{
+        passivePizzaBoxCoins+=12;
+        bonusPizzaMultiplier=8
+        milestoneMultiplier=10
+        pizzaCoinMultiplier=5
+        powerGain+=0.05
+    }
+    },{
+    id:"8",
+    title:'Pizza IX',
+    requirement: 7000,
+    info: "Reach 7000 Full Pizzas.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>10x Pizzas<br>8x Bonus Pizza<br>5x Pizza Coins<br>Power +0.05",
+    claimed: false,
+    effect: ()=>{
+        passivePizzaBoxCoins+=12;
+        bonusPizzaMultiplier=8
+        milestoneMultiplier=10
+        pizzaCoinMultiplier=5
+        powerGain+=0.05
+    }
+    },{
+    id:"9",
+    title:'Pizza X',
+    requirement: 10000,
+    info: "Reach 10000 Full Pizzas.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>10x Pizzas<br>8x Bonus Pizza<br>5x Pizza Coins<br>Power +0.05",
+    claimed: false,
+    effect: ()=>{
+        passivePizzaBoxCoins+=12;
+        bonusPizzaMultiplier=8
+        milestoneMultiplier=10
+        pizzaCoinMultiplier=5
+        powerGain+=0.05
+    }
+    },
 
 ]
 makeMilestones()
