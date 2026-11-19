@@ -555,7 +555,7 @@ position: absolute;
 top: 57%;
 bottom: 10%;
 left: 13%;
-width: 30%;
+width: 45%;
 
 
 border: 1px dashed black;
@@ -566,6 +566,7 @@ overflow-x: hidden;
 
 
 #milestone-tower{
+    position: relative;
     width: 100%;
     /* 1 start x body 1 end */
 aspect-ratio: 1/32;
@@ -610,3 +611,130 @@ image-rendering: crisp-edges;
 flex-shrink: 0;
 
 }
+.milestoneRow{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    /* border: 2px solid gold; */
+}
+
+.milestone-dash{
+    width: 120px;
+    border: 1px dashed black;
+}
+
+.milestone-button{
+    margin-left: 4px;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: rgba(229, 225, 225, 0.35);
+    font-size: clamp(2px, 1cqmin, 14px);
+    font-family: "Press Start 2P", monospace;
+    flex-grow: 1;
+    width: 100%;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    min-height: 4vh;
+    line-height: 1.4;
+    /* border: 1px dashed gold; */
+
+}
+.milestone-button:hover{
+    border: 1px solid rgb(248, 248, 248);
+}
+
+
+.milestone-button.claim{
+    background-color: #f0c837;
+    border-color: rgb(4, 4, 4);
+    cursor: pointer;
+    box-shadow: 0 0 8px #ffd700;
+
+}
+.milestone-button.claim:hover{
+    background-color: white;
+    border-color: gold;
+
+}
+.milestone-button.claimed{
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color:rgba(133, 131, 131, 0.798);
+}
+#pizzaBoxCoinsDisplay{
+    position: absolute;
+    top: 68%;
+    right: 10%;
+    font-size: clamp(4px, 2cqmin,14px);
+    font-family: "Press Start 2P";
+
+}
+#tower-stack{
+    position: absolute;
+    top: 0;
+    left: 0px;
+    width:  55px;
+    height: 100%;
+    pointer-events: none;
+    /* overflow: hidden; */
+}
+
+/* this too */
+.stacked-box::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 8px;
+  height: 2px;
+  background: linear-gradient(to right, #008C45 50%, #CD212A 50%);
+}
+#tower-milestones{
+    position: absolute;
+    top: 0;
+    left: 3px;
+    right: 3px;
+    height: 100%;
+}
+/* https://toolis.dev/tools/animation-generator */
+.stacked-box{
+    margin-left: 5px;
+    /* margin-right: 5px; */
+
+    position: absolute;
+    bottom: 0px;
+    width: 50px;
+    height: 10px;
+    border-radius: 1px;
+    /* got it from online */
+    background: linear-gradient(to bottom, #e5d2b9 0%, #dcc19d 100%);
+    border: 1px solid #c0a88a;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    transform: translateX(var(--random,0px));
+
+}
+.stacked-box.dropping{
+     animation: drop 3s ease-in forwards;
+
+}
+@keyframes drop {
+  0% {
+    transform: translate(-100px, -150px) rotate(36deg);
+  }
+  30% {
+    transform: translate(var(--random), -150px) rotate(2deg);
+  }
+
+  100%{
+    transform: translate(var(--random), 0px) rotate(0deg);
+
+  }
+}
+

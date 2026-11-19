@@ -82,6 +82,12 @@ let autoComboTime=2000;
 let autoComboTimer=null;
 //
 let autoUpgradeTimer=null;
+//MILESTONE STUFF
+let passivePizzaBoxCoins=0;
+let pizzaBoxCoins=0;
+let milestoneMultiplier=1
+let pizzaCoinMultiplier=1
+let bonusPizzaMultiplier=1
 //main UI
 const pizzaImage=document.getElementById("pizza")
 const targetImage=document.getElementById("target")
@@ -120,7 +126,7 @@ function calculateGain(multi=1){
         scoreSquared=1+(Math.log(score)*0.05*upgrade12.currentCount)
     }
     return ((
-    totalUpgradeBonus*scoreSquared*permanentMultiplier*
+    milestoneMultiplier*totalUpgradeBonus*scoreSquared*permanentMultiplier*
     amountPerClickBase*amountPerClick*multiplier*
     critMultiplier*multi)**powerGain)
 }
@@ -293,7 +299,7 @@ pizzaImage.src=imgArray[slicesEaten]
 
 //8 slices
 if(slicesEaten>=8){
-gain*= bonusPizza/(amountPerClick*amountPerClickBase);
+gain*= (bonusPizza*bonusPizzaMultiplier)/(amountPerClick*amountPerClickBase);
 
 
 if(doubleBakedChance>0&&Math.random()<doubleBakedChance){
@@ -303,8 +309,11 @@ if(doubleBakedChance>0&&Math.random()<doubleBakedChance){
     popupColor="#e6cd12"
 }
 soundFinishPizza(0.8);
-pizzasEaten+=1;
 slicesEaten=0;
+if(tabButtons[2].unlocked()){
+    pizzasEaten+=1
+    updatePizzaStack()
+}
 isCooldown=true;
 spawnFloatingText("✨PIZZA FORMED!✨",0,-30,"crit centered");
 
@@ -453,6 +462,10 @@ if(multiplierDisplay){
 }
 if(coinDisplay){
     coinDisplay.textContent="Pizza Coins:"+(pizzaCoins.toFixed(2));
+}
+//idk a better way to write this
+if(document.getElementById("milestone-bar").style.display !=="none"&& typeof updateMilestoneUI === "function"){
+    updateMilestoneUI()
 }
 }
 updateUI()

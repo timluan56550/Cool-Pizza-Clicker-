@@ -41,7 +41,7 @@ function openTabs(){
         tabsGrid.appendChild(button)
     })
 }
-
+//PUT REQUIREMENTS IN UNLCOKS
 const tabButtons=[
     {
         id: "upgrades",
@@ -68,7 +68,7 @@ const tabButtons=[
  {
         id: "milestones",
         title:"Milestones",
-        unlocked: ()=>true,
+        unlocked: ()=>currentRebirthIndex>=2,
         clicked: ()=>{
             milestoneGrid.style.display="flex"
             milestoneBar.style.display="block"

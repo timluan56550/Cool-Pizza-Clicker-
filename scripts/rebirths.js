@@ -37,7 +37,7 @@ function openRebirth(){
             }
             // base is 20, every 10x score gives you +20 currency
             let bonusCoins=(25*Math.sqrt(score/1000000))
-            pizzaCoins+=bonusCoins
+            pizzaCoins+=bonusCoins*pizzaCoinMultiplier
 
             //every time you milstone reset, multiply passive by 2 base is 1
             if(pizzaPassive===0){
@@ -53,6 +53,7 @@ function openRebirth(){
             startScore()
             updateUI();
             openRebirth();
+            openTabs()
             console.log("rebirthed")
         }else{
             alert("You do not have enough score to rebirth.")
@@ -80,7 +81,6 @@ function rebirth(){
             isComboLocked=false;
             critChance=0;
             slicesEaten=0;
-            pizzasEaten=0;
             isCooldown=false;
             trackNumber=0;
             bonusPizza=4;
@@ -189,7 +189,7 @@ function openCoinShop(){
 
 setInterval(()=>{
     if(pizzaPassive>0){
-        pizzaCoins+=pizzaPassive/25;
+        pizzaCoins+=(pizzaPassive/25)*pizzaCoinMultiplier;
         updateUI()
     }
 },40)
@@ -285,7 +285,7 @@ const rebirthList= [
     },
       {
         title:'Second Rebirth',
-        info:'Resets your progress. Bonuses: 2.5x CpC, 2.5x Bonus Pizza, 2.5x Crits, 5% Crit chance <br>+2 Passive Pizza Coin Per Sec',
+        info:'Resets your progress. <br>Bonuses: 2.5x CpC<br>2.5x Bonus Pizza<br>2.5x Crits<br>5% Crit chance<br>+2 Passive Pizza Coin Per Sec<br><b>UNLOCK MILESTONES<b> ',
         price: 100000000,
 
         effect: ()=>{
@@ -364,20 +364,15 @@ const pizzaCoinUpgradeList=[
 },   {
         id: '2',
         title: 'TEMPORARY',
-        info: 'Start every rebirth with 100 Pizzas, 3x per upgrade,',
-        price: 5,
-        basePrice:5,
-        maxCount: 8,
-        currentCount: 0,
-        growth: 5,
+        info: 'Temporary,',
+        price: 50,
+        basePrice:50,
+        maxCount: 10,
+        currentCount:0,
+        growth: 20,
         required: ()=> pizzaCoins>=0,
-        effect: ()=> {if (startingScore===0){
-            startingScore=100
-        }else{
-            startingScore*=3
-        }
-    },
-            buff: (count)=>formatShort.format(100*Math.pow(3,count-1))+" Pizzas"
+        effect: ()=>score+=1,
+        buff: ()=>score
 
 
 },
