@@ -78,7 +78,7 @@ function rebirth(){
             amountPerClick=1;
             combo=0;
             multiplier=1;
-            isComboLocked=false;
+            // isComboLocked=false;
             critChance=0;
             slicesEaten=0;
             isCooldown=false;
@@ -97,7 +97,7 @@ function rebirth(){
             clearInterval(autoComboTimer)
             targetImage.style.display="none"
             lockCombo.style.display="none"
-            lockCombo.src="images/unlock.png";
+            // lockCombo.src="images/unlock.png";
 
             
 }

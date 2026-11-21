@@ -112,16 +112,21 @@ const upgradeGrid=document.getElementById("upgrade-grid");
 const rebirthGrid=document.getElementById("rebirth-grid");
 const coinGrid=document.getElementById("pizza-grid")
 const coinDisplay=document.getElementById("pizzaCoinsDisplay")
-
-
+const pizzaBoxCoinsDisplay=document.getElementById("pizzaBoxCoinsDisplay")
+const pizzasEatenDisplay=document.getElementById("pizzasEatenDisplay")
 function calculateGain(multi=1){
         const upgrade12=upgradeList.find(upgrade=>upgrade.id==="12")
     const upgrade14=upgradeList.find(upgrade=>upgrade.id==="14")
 
     let totalLevels=totalUpgrades()
-    let totalUpgradeBonus=1+(totalLevels*(0.02+(0.01*upgrade14.currentCount)))
+
+
+    let totalUpgradeBonus=1
+    if(upgrade14.currentCount>0){
+    totalUpgradeBonus=1+(totalLevels*(0.02+(0.01*upgrade14.currentCount)))
+    }
+
     let scoreSquared=1;
-    //find thes upgrade
     if(upgrade12.currentCount>0 && score>1){
         scoreSquared=1+(Math.log(score)*0.05*upgrade12.currentCount)
     }
@@ -130,7 +135,10 @@ function calculateGain(multi=1){
     amountPerClickBase*amountPerClick*multiplier*
     critMultiplier*multi)**powerGain)
 }
+setInterval(()=>{
+console.log("CpC: "+format.format(calculateGain()))
 
+},1000)
 //let the audio play multiple times overlapping
 //SOUND AND MUSISC
 function soundClick(){
@@ -462,6 +470,12 @@ if(multiplierDisplay){
 }
 if(coinDisplay){
     coinDisplay.textContent="Pizza Coins:"+(pizzaCoins.toFixed(2));
+}
+if(pizzaBoxCoinsDisplay){
+    pizzaBoxCoinsDisplay.textContent="Pizza Box Coins: "+format.format(pizzaBoxCoins)
+}
+if(pizzasEatenDisplay){
+    pizzasEatenDisplay.textContent="Pizzas Eaten: "+pizzasEaten
 }
 //idk a better way to write this
 if(document.getElementById("milestone-bar").style.display !=="none"&& typeof updateMilestoneUI === "function"){

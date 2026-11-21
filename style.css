@@ -216,7 +216,6 @@ overflow: hidden;
     width: 100%;
 
 
-
 }
 
 #upgrade-grid{
@@ -304,15 +303,7 @@ border-radius: 4px;
 
 }
 
-.upgrade-button:hover{
-    background-color: white;
-    border-color: gold;
-}
-.upgrade-button.maxed{
-    opacity: 0.5;
-    cursor: not-allowed;
-    background-color:rgba(133, 131, 131, 0.798);
-}
+
 #upgrade-info{
 position: absolute;
 /* puts it center of the upgrade buttton */
@@ -451,16 +442,58 @@ border-radius: 4px;
 
 }
 
-.rebirth-button:hover, .pizza-button:hover{
+.rebirth-button:hover, .pizza-button:hover, .upgrade-button:hover, .milestoneUpgrade-button:hover{
     background-color: rgb(231, 213, 230);
     border-color: gold;
 }
-.rebirth-button.maxed, .pizza-button.maxed{
+.rebirth-button.maxed, .pizza-button.maxed, .upgrade-button.maxed, .milestoneUpgrade-button.pizza-button.maxed{
     opacity: 0.5;
     cursor: not-allowed;
     background-color:rgba(133, 131, 131, 0.798);
 }
+#milestone-grid{
+container-type: inline-size;
+position: absolute;
+top: 59%;
+bottom: 10%;
+left: 60%;
+right: 8%;
+display:flex;
+flex-direction: column;
+gap: 4px;
+padding:4px;
+/* border: 1px dashed black; */
+overflow-y: auto;
+overflow-x: hidden;
 
+
+}
+.milestoneUpgrade-button{
+background-color:rgb(244, 229, 143);
+border: 2px solid black;
+border-radius: 4px;
+padding: 6px 5px;
+/* cqw Container query width( based of its container) remember to fix this because i dont think it works, i still dont udnerstand watch a tutorial later*/
+font-size:clamp(2px, 8cqmin,14px);
+font-family: "Press Start 2P", monospace;
+width:100%;
+max-width: 100%;
+max-height: 70px;
+min-height: 20cqw;
+flex-shrink: 0;
+overflow: hidden;
+box-sizing: border-box;
+cursor: pointer;
+
+display: flex;
+flex-direction: column;
+align-items: center;
+gap:0.1vh;
+
+
+
+
+}
 .toggleOn{
     background-color: #5db983 !important; 
         opacity: 1 !important;
@@ -532,33 +565,17 @@ height: 6cqh;
     top: 15%;
 } */
 
-#milestone-grid{
-container-type: inline-size;
-position: absolute;
-top: 56%;
-bottom: 10%;
-left: 50%;
-right: 10%;
-display:flex;
-flex-direction: column;
-gap: 4px;
-padding:4px;
-/* border: 1px dashed black; */
-overflow-y: auto;
-overflow-x: hidden;
 
-
-}
 
 #milestone-bar{
 position: absolute;
-top: 57%;
+top: 59%;
 bottom: 10%;
 left: 13%;
 width: 45%;
 
 
-border: 1px dashed black;
+border: 3px outset black;
 border-radius: 14px;
 overflow-y: auto;
 overflow-x: hidden;
@@ -738,3 +755,25 @@ flex-shrink: 0;
   }
 }
 
+#pizzaBoxCoinsDisplay{
+    position: absolute;
+    top: 55.7%;
+    left: 13%;
+    right: 13%;
+    text-align: center;
+    font-size: clamp(4px, 2cqmin,14px);
+    font-family: "Press Start 2P";
+}
+#pizzasEatenDisplay{
+    position: absolute;
+    top: 60%;
+    left: 16%;
+    right: 43%;
+    line-height: 1.4em;
+    text-align: center;
+    font-size: clamp(4px, 1.4cqmin,14px);
+    font-family: "Press Start 2P";
+     background-color: rgba(0, 0, 0, 0.45);
+     padding: 2px;
+    border-radius: 4px;
+}

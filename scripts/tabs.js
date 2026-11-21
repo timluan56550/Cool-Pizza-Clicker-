@@ -33,6 +33,8 @@ function openTabs(){
             coinDisplay.style.display ="none";
             milestoneBar.style.display="none"
             milestoneGrid.style.display="none";
+            pizzaBoxCoinsDisplay.style.display="none"
+            pizzasEatenDisplay.style.display="none"
 
             tab.clicked()
             openTabs()
@@ -73,6 +75,9 @@ const tabButtons=[
         clicked: ()=>{
             milestoneGrid.style.display="flex"
             milestoneBar.style.display="block"
+            pizzaBoxCoinsDisplay.style.display="block"
+            pizzasEatenDisplay.style.display="block"
+
             openMilestone()
         }
     },

@@ -5,11 +5,62 @@ let milestoneSave={}
 
 
 function openMilestone(){
-    const milestoneGrid=document.getElementById("milestone-grid")
+    const grid=document.getElementById("milestone-grid")
     const milestoneBar=document.getElementById("milestone-bar")
 
     const scroll=milestoneBar.scrollTop
+
+    grid.innerHTML=""
+    milestoneUpgradeList.forEach(upgrade=>{
+        if(!upgrade.required()){
+            return;
+        }  
+
+        const maxed=upgrade.currentCount>=upgrade.maxCount;
+        const upgradeButton=document.createElement("div");
+        upgradeButton.className=`milestoneUpgrade-button ${maxed ? 'maxed' : ''}`;
+        upgradeButton.innerHTML=  
+            "<b>"+upgrade.title+"</b>"+
+            "<span> Cost: "+ format.format(upgrade.price) + "</span>" +
+            "<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"+
+            "<span style='color: green;'>"+totalBuff(upgrade)+"</span>"
+            
+        upgradeButton.addEventListener("click", ()=>{
+            if(maxed){
+                return;
+            }
+            if(pizzaBoxCoins>= upgrade.price){
+                soundClick();
+                pizzaBoxCoins-=upgrade.price;
+                upgrade.currentCount+=1;
+                upgrade.price=Math.floor(upgrade.price*upgrade.growth);
+                upgrade.effect();
+                updateUI();
+                openMilestone();
+            } 
+        }) 
+        
+        upgradeButton.addEventListener("mouseenter",()=>{
+            if(!info){
+                return;
+            }
+            info.style.display="block";
+            soundHoverOver();
+            info.innerHTML=
+                "<span>" + upgrade.info + "</span>"
+        })
     
+        upgradeButton.addEventListener("mouseleave", ()=>{
+            if(!info){
+                return;
+            }
+            info.style.display="none";
+        });
+        
+        grid.appendChild(upgradeButton)
+    })
+
+
     updateMilestoneUI()
     updatePizzaStack()
     
@@ -165,6 +216,146 @@ function milestonePosition(requirement, maxRequirement){
     const percentage=(1-ratio)*100;
     return percentage+"%"
 }
+setInterval(()=>{
+    if(passivePizzaBoxCoins>0){
+        pizzaBoxCoins+=(passivePizzaBoxCoins/25);
+        updateUI()
+    }
+},40)
+
+
+
+
+
+
+
+const milestoneUpgradeList=[
+    {
+        id: '0',
+        title: 'Milestone Upgrade 1',
+        info: 'Longer text',
+        price: 20,
+        basePrice:20,
+        maxCount: 5,
+        currentCount: 0,
+        growth: 1.8,
+        required: ()=> pizzaBoxCoins>=0,
+        effect: ()=> score*=10,
+        buff: (count)=>"+"+count+" Cpc"
+    },
+    {
+        id: '0',
+        title: 'Milestone Upgrade 1',
+        info: 'Longer text',
+        price: 20,
+        basePrice:20,
+        maxCount: 5,
+        currentCount: 0,
+        growth: 1.8,
+        required: ()=> pizzaBoxCoins>=0,
+        effect: ()=> score*=10,
+        buff: (count)=>"+"+count+" Cpc"
+    },
+    {
+        id: '0',
+        title: 'Milestone Upgrade 1',
+        info: 'Longer text',
+        price: 20,
+        basePrice:20,
+        maxCount: 5,
+        currentCount: 0,
+        growth: 1.8,
+        required: ()=> pizzaBoxCoins>=0,
+        effect: ()=> score*=10,
+        buff: (count)=>"+"+count+" Cpc"
+    },
+    {
+        id: '0',
+        title: 'Milestone Upgrade 1',
+        info: 'Longer text',
+        price: 20,
+        basePrice:20,
+        maxCount: 5,
+        currentCount: 0,
+        growth: 1.8,
+        required: ()=> pizzaBoxCoins>=0,
+        effect: ()=> score*=10,
+        buff: (count)=>"+"+count+" Cpc"
+    },
+    {
+        id: '0',
+        title: 'Milestone Upgrade 1',
+        info: 'Longer text',
+        price: 20,
+        basePrice:20,
+        maxCount: 5,
+        currentCount: 0,
+        growth: 1.8,
+        required: ()=> pizzaBoxCoins>=0,
+        effect: ()=> score*=10,
+        buff: (count)=>"+"+count+" Cpc"
+    },
+    {
+        id: '0',
+        title: 'Milestone Upgrade 1',
+        info: 'Longer text',
+        price: 20,
+        basePrice:20,
+        maxCount: 5,
+        currentCount: 0,
+        growth: 1.8,
+        required: ()=> pizzaBoxCoins>=0,
+        effect: ()=> score*=10,
+        buff: (count)=>"+"+count+" Cpc"
+    },
+    {
+        id: '0',
+        title: 'Milestone Upgrade 1',
+        info: 'Longer text',
+        price: 20,
+        basePrice:20,
+        maxCount: 5,
+        currentCount: 0,
+        growth: 1.8,
+        required: ()=> pizzaBoxCoins>=0,
+        effect: ()=> score*=10,
+        buff: (count)=>"+"+count+" Cpc"
+    },
+    {
+        id: '0',
+        title: 'Milestone Upgrade 1',
+        info: 'Longer text',
+        price: 20,
+        basePrice:20,
+        maxCount: 5,
+        currentCount: 0,
+        growth: 1.8,
+        required: ()=> pizzaBoxCoins>=0,
+        effect: ()=> score*=10,
+        buff: (count)=>"+"+count+" Cpc"
+    },
+    {
+        id: '0',
+        title: 'Milestone Upgrade 1',
+        info: 'Longer text',
+        price: 20,
+        basePrice:20,
+        maxCount: 5,
+        currentCount: 0,
+        growth: 1.8,
+        required: ()=> pizzaBoxCoins>=0,
+        effect: ()=> score*=10,
+        buff: (count)=>"+"+count+" Cpc"
+    },
+]
+
+
+
+
+
+
+
+
 
 const milestoneList =[
 {

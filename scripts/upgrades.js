@@ -298,6 +298,8 @@ buff: (count)=>"+"+count*5+"% Chance"
 
 
 },
+
+
 {
 id: '12',
 title: 'More pizza, more pizza(er)',
@@ -309,7 +311,7 @@ currentCount: 0,
 growth: 1.5,
 required: ()=>upgradeList[9].currentCount>=1,
 effect: ()=>{},
-buff: (count)=>"Bought "+count
+buff: (count)=>"x"+(1+(Math.log(score)*0.05*count)).toFixed(2)
 
 
 },
