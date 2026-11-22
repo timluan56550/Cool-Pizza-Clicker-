@@ -18,8 +18,15 @@ function openRebirth(){
         grid.appendChild(completionMessage);
         return;
     }
-
-    const preview =score>=1000000?("+"+(15*Math.sqrt(score/1000000)).toFixed(2)):"Reach amount to Rebirth"
+    let preview=0
+    const cap=10000000000
+    if(score<=cap){
+    preview =score>=1000000?("+"+(25*Math.sqrt(score/1000000)).toFixed(2)):"Reach amount to Rebirth"
+    }else{
+    const baseAtCap = 25 * Math.sqrt(cap / 1000000); 
+    const excessRatio = score / cap;
+    preview = "+"+(baseAtCap * Math.pow(excessRatio, 0.2)).toFixed(2);
+    }
     const rebirthButton=document.createElement("div");
 
     rebirthButton.className="rebirth-button";
@@ -189,7 +196,7 @@ function openCoinShop(){
 
 setInterval(()=>{
     if(pizzaPassive>0){
-        pizzaCoins+=(pizzaPassive/25)*pizzaCoinMultiplier;
+        pizzaCoins+=((pizzaPassive+pizzaPassiveAdd)/25)*pizzaCoinMultiplier;
         updateUI()
     }
 },40)
@@ -298,7 +305,7 @@ const rebirthList= [
      {
         title:'Third Rebirth',
         info:'Resets your progress. Bonuses: 5x CpC, 4x Bonus Pizza, 4x Crits, 10% Crit chance <br>+4 Passive Pizza Coin Per Sec',
-        price: 1000000000,
+        price: 50000000000,
 
         effect: ()=>{
             amountPerClick*=5;
@@ -310,7 +317,7 @@ const rebirthList= [
     {
         title:'Fourth Rebirth',
         info:'Resets your progress. Bonuses: 8x CpC, 6x Bonus Pizza, 6x Crits, 15% Crit chance <br>+8 Passive Pizza Coin Per Sec',
-        price: 100000000000,
+        price: 25000000000000,
 
         effect: ()=>{
             amountPerClick*=8;

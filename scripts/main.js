@@ -39,7 +39,9 @@ refreshing2 =setTimeout(()=>{
 
 
 //PIZZA 
-let score=1000000;
+// let score=1000000;
+let score=0;
+
 let amountPerClick=1;
 let multiplier=1;
 let slicesEaten=0;
@@ -69,7 +71,9 @@ let activeFloatingText=null;
 
 //REBIRTH
 let currentRebirthIndex=0;
-let pizzaCoins=10000000
+let pizzaCoins=0;
+// let pizzaCoins=10000000
+
 let pizzaPassive=0;
 //PIZZA PERMANENT
 let permanentMultiplier=1
@@ -88,6 +92,12 @@ let pizzaBoxCoins=0;
 let milestoneMultiplier=1
 let pizzaCoinMultiplier=1
 let bonusPizzaMultiplier=1
+let slicePerClick=1
+let pizzasEatenMultiplier=1
+let pizzaPassiveAdd=0
+let bonusPizzaMultiplier2=1
+let milestoneMultiplier2=1
+let cooldown=0
 //main UI
 const pizzaImage=document.getElementById("pizza")
 const targetImage=document.getElementById("target")
@@ -131,7 +141,7 @@ function calculateGain(multi=1){
         scoreSquared=1+(Math.log(score)*0.05*upgrade12.currentCount)
     }
     return ((
-    milestoneMultiplier*totalUpgradeBonus*scoreSquared*permanentMultiplier*
+    milestoneMultiplier2*milestoneMultiplier*totalUpgradeBonus*scoreSquared*permanentMultiplier*
     amountPerClickBase*amountPerClick*multiplier*
     critMultiplier*multi)**powerGain)
 }
@@ -298,7 +308,7 @@ if(isCrit){
 }
 
 
-slicesEaten+=1;
+slicesEaten+=1*slicePerClick;
 slicesEaten=Math.max(0, Math.min(8,slicesEaten))
 //calculate the gain
 let gain=calculateGain(1);
@@ -307,11 +317,11 @@ pizzaImage.src=imgArray[slicesEaten]
 
 //8 slices
 if(slicesEaten>=8){
-gain*= (bonusPizza*bonusPizzaMultiplier)/(amountPerClick*amountPerClickBase);
+gain*= (bonusPizza*bonusPizzaMultiplier*bonusPizzaMultiplier2)/(amountPerClick*amountPerClickBase);
 
 
 if(doubleBakedChance>0&&Math.random()<doubleBakedChance){
-    gain*=1000
+    gain*=100
     popupColor="#00FF98"
 }else{
     popupColor="#e6cd12"
@@ -319,7 +329,7 @@ if(doubleBakedChance>0&&Math.random()<doubleBakedChance){
 soundFinishPizza(0.8);
 slicesEaten=0;
 if(tabButtons[2].unlocked()){
-    pizzasEaten+=1
+    pizzasEaten+=1*pizzasEatenMultiplier
     updatePizzaStack()
 }
 isCooldown=true;
@@ -331,7 +341,7 @@ setTimeout(()=>{
 
     pizzaImage.src ="images/pizza/pizza8.png";
     isCooldown=false;
-},400);
+},400-(cooldown*1000));
 screenShake();
 }
 if(isCrit){
@@ -394,7 +404,24 @@ const formatShort=new Intl.NumberFormat("en-US",{
     compactDisplay: "short",
     maximumFractionDigits: 2
 })
-
+const numbers=[
+    "", " Thousand", " Million", " Billion", " Trillion", 
+    " Quadrillion", " Quintillion", " Sextillion", " Septillion", 
+    " Octillion", " Nonillion", " Decillion", " Undecillion", " Duodecillion",
+    " Tredecillion", " Quattuordecillion"
+]
+function numberFormat(num){
+    if (num<1000){
+        return Math.floor(num).toString()
+    }
+    const comma=Math.floor(Math.log10(num)/3)
+    if(comma>=numbers.length){
+        return num.toExponential(2)
+    }
+    const tier=Math.pow(10,comma*3)
+    const tiered=num/tier
+    return tiered.toFixed(2)+numbers[comma]
+}
 
 
 
@@ -460,7 +487,7 @@ function spawnFloatingText(text, x,y, classes) {
 
 function updateUI(){
 if(scoreDisplay){
-    scoreDisplay.textContent=format.format(score)
+    scoreDisplay.textContent=numberFormat(score)
 }
 if(comboDisplay){
     comboDisplay.textContent=combo;
@@ -475,7 +502,7 @@ if(pizzaBoxCoinsDisplay){
     pizzaBoxCoinsDisplay.textContent="Pizza Box Coins: "+format.format(pizzaBoxCoins)
 }
 if(pizzasEatenDisplay){
-    pizzasEatenDisplay.textContent="Pizzas Eaten: "+pizzasEaten
+    pizzasEatenDisplay.textContent="Pizzas Eaten "+pizzasEaten
 }
 //idk a better way to write this
 if(document.getElementById("milestone-bar").style.display !=="none"&& typeof updateMilestoneUI === "function"){

@@ -71,7 +71,7 @@ const tabButtons=[
     // currentRebirthIndex>=2
         id: "milestones",
         title:"Milestones",
-        unlocked: ()=>true,
+        unlocked: ()=>currentRebirthIndex>=2,
         clicked: ()=>{
             milestoneGrid.style.display="flex"
             milestoneBar.style.display="block"

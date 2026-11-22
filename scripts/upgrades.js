@@ -147,7 +147,7 @@ buff: (count)=>"Bought"
 {
 id: '3',
 title: 'Crispy Crits',
-info:'adds a 2% chance for every click to give you 4x Pizzas',
+info:'adds a <b>2%</b> chance for every click to give you <b>4x</b> Pizzas',
 price: 500,
 basePrice:500,
 maxCount: 5,
@@ -163,7 +163,7 @@ buff: (count)=>"+"+count*2+"% Crit"
 {
 id: '4',
 title: 'Combo AutoClicker',
-info:'Automatically clicks the target for you every 2 seconds',
+info:'Automatically clicks the target for you every <b>2</b> seconds',
 price: 350,
 basePrice:350,
 maxCount: 1,
@@ -180,7 +180,7 @@ buff: (count)=>"Every "+(autoComboTime/1000)+"s"
 {
 id: '5',
 title: 'Bigger Bonus',
-info:'Increases the reward for finishing a pizza by 1.4x per upgrade!',
+info:'Increases the reward for finishing a pizza by <b>1.4x</b> per upgrade!',
 price: 200,
 basePrice:200,
 maxCount: 10,
@@ -215,7 +215,7 @@ buff: (count)=>"Bought "+count
 {
 id: '7',
 title: 'XL Pizzas',
-info:'Multiplies the CpC by 1.3 per upgrade',
+info:'Multiplies the CpC by <b>1.3</b> per upgrade',
 price: 500,
 basePrice:500,
 maxCount: 10,
@@ -232,7 +232,7 @@ buff: (count)=>(Math.pow(1.3, count)).toFixed(2)+"x CpC"
 {
 id: '8',
 title: 'More Powerful Crits',
-info:'Increases the multiplier for Crits by 1.5x per upgrade',
+info:'Increases the multiplier for Crits by <b>1.5x</b> per upgrade',
 price: 800,
 basePrice:800,
 maxCount: 2,
@@ -249,7 +249,7 @@ buff: (count)=>(Math.pow(1.5, count)).toFixed(2)+"x Crits"
 {
 id: '9',
 title: 'Powerful Pizza',
-info:'Powers EVERYTHING by 1.1',
+info:'Powers <b>EVERYTHING</b> by <br><b>1.05</b>',
 price: 50000,
 basePrice:50000,
 maxCount: 1,
@@ -266,7 +266,7 @@ buff: (count)=>"1.1"
 {
 id: '10',
 title: 'XL Bonus with Bonus',
-info:'1.7x Bonus Pizza AND 1.5x your CpC',
+info:'<b>1.7x</b> Bonus Pizza<br>AND <br><b>1.5x</b> your CpC',
 price: 10000,
 basePrice:10000,
 maxCount: 4,
@@ -284,7 +284,7 @@ buff: (count)=>(Math.pow(1.7, count)).toFixed(2)+"x Bonus "+(Math.pow(1.5, count
 {
 id: '11',
 title: 'MORE CRIT CHAAAANCE',
-info:'Increase your crit chance by 5% per upgrade',
+info:'Increase your crit chance by <b>5%</b> per upgrade',
 price: 100000,
 basePrice:100000,
 maxCount: 3,
@@ -318,7 +318,7 @@ buff: (count)=>"x"+(1+(Math.log(score)*0.05*count)).toFixed(2)
 {
 id: '13',
 title: 'Upgrade Up-Pizzas',
-info:'Boosts pizza gain by +2% for every total upgrade level you own. +1% per upgrade' ,
+info:'Boosts pizza gain by <b>+2%</b> for every total upgrade level you own. <br><b>+1%</b> per upgrade' ,
 price: 50000000,
 basePrice:50000000,
 maxCount: 4,
@@ -333,13 +333,13 @@ buff: (count)=>"+"+totalUpgrades()*(count+1)+"%"
 {
 id: '14',
 title: 'Double Baked Pizza',
-info:'5% finishing a pizza gives you 1000x bonus!. +5% per upgrade' ,
+info:'5% finishing a pizza gives you <b>100x</b> bonus!. <br><b>+5%</b> per upgrade' ,
 price: 155555555,
 basePrice:155555555,
 maxCount: 4,
 currentCount: 0,
 growth: 1.7,
-required: ()=>currentRebirthIndex>=2&&upgradeList[11].currentCount>=3,
+required: ()=>currentRebirthIndex>=3&&upgradeList[11].currentCount>=3,
 effect: ()=>{ doubleBakedChance+=0.05
 },
 buff: (count)=>count*5+"%"
