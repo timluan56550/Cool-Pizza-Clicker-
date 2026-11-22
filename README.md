@@ -9,6 +9,8 @@ Open the Upgrade shop! - by clicking the notepad on your right side you can open
 
 Open the Rebirth shop! - by clicking the button at the bottom fo the notepad, you can switch between the two pages. Once you get enough to rebirth, click the rebirth button to get permanent bonuses, you will also get Pizza Coins to buy stuff from the rebirth shop!
 
+Unlock Milestones - Every entire pizza you eat will count towards the milestone meter, click to claim the milestones and earn pizza box coins to buy more upgrades!
+
 Some features include -
 
     Critical hits - Get a chance to get more pizzas a click!
@@ -21,5 +23,7 @@ Some features include -
 
     Automation - Inside the Pizza Coin/Rebirth shop, buy automation upgrades like auto clickers or auto buyers!
 
-    Try to reach a goal of 1 Trillion Pizzas!
+    Milestone - More pizzas eaten will get you higher up the meter! Try to hit 10,000 Pizzas eaten!
+    
+    Try to reach a goal of 100 Quadrillion Pizzas!
     

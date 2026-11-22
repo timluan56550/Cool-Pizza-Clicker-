@@ -324,7 +324,7 @@ target: 600,
     {
         title:'Fourth Rebirth',
         info:'Resets your progress. Bonuses: 8x CpC, 6x Bonus Pizza, 3x Crits, 10% Crit chance <br>+8 Passive Pizza Coin Per Sec',
-        price: 25000000000000,
+        price: 50000000000000,
         target: 1000,
 
         effect: ()=>{
@@ -350,7 +350,7 @@ const pizzaCoinUpgradeList=[
         title: 'Golden Pizza',
         info: 'Increase all pizza gains by +10% per level',
         price: 10,
-        maxCount: 25,
+        maxCount: 30,
         currentCount: 0,
         growth: 10,
         required: ()=> pizzaCoins>=0,
@@ -378,16 +378,16 @@ const pizzaCoinUpgradeList=[
 
 },   {
         id: '2',
-        title: 'TEMPORARY',
-        info: 'Temporary,',
-        price: 50,
-        basePrice:50,
-        maxCount: 10,
-        currentCount:0,
-        growth: 20,
-        required: ()=> pizzaCoins>=0,
-        effect: ()=>score+=1,
-        buff: ()=>score
+        title: 'Stack Even Faster',
+        info: '+3 pizzas Eaten gain per pizza per upgrade',
+        price: 1000,
+        basePrice:1000,
+        maxCount: 3,
+        currentCount:0, 
+        growth: 200,
+        required: ()=> currentRebirthIndex>=3&&milestoneUpgradeList[6].currentCount>=3,
+        effect: ()=>pizzasEatenMultiplier+=3,
+        buff: (count)=>"+"+count*3+"/Pizza"
 
 
 },
@@ -409,8 +409,8 @@ const pizzaCoinUpgradeList=[
         id: '4',
         title: 'AUTOMATION: Auto Baker',
         info: 'Automatically clicks the pizza every second, 2x speed per upgrade',
-        price: 40,
-        basePrice:40,
+        price: 30,
+        basePrice:20,
         maxCount: 4,
         currentCount: 0,
         growth: 30,

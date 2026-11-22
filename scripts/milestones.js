@@ -1,5 +1,5 @@
 let milestoneSave={}
-
+document.getElementById("milestone-bar")?.addEventListener("scroll", milestoneArrows);
 
 
 
@@ -7,6 +7,8 @@ let milestoneSave={}
 function openMilestone(){
     const grid=document.getElementById("milestone-grid")
     const milestoneBar=document.getElementById("milestone-bar")
+
+
 
     const scroll=milestoneBar.scrollTop
 
@@ -76,6 +78,37 @@ function openMilestone(){
         milestoneBar.scrollTo({ 
         top: scroll, behavior: 'smooth' });
      }
+     milestoneArrows()
+}
+function milestoneArrows(){
+    const milestoneBar=document.getElementById("milestone-bar")
+   if (!milestoneBar || !upArrow || !downArrow) {
+    return}
+    let above=false
+    let below=false;
+const boxTop=milestoneBar.scrollTop;
+const boxHeight=milestoneBar.clientHeight
+    milestoneList.forEach(milestone=>{
+        const reached=pizzasEaten>=milestone.requirement
+    const claimable= reached && !milestone.claimed;
+    if(claimable){
+        const save=milestoneSave[milestone.id]
+        if(save && save.button){
+            //gets the parent of the button so the row
+            const row =save.button.parentElement
+            const top=row.offsetTop
+            if(top<boxTop){
+                above=true
+            }else if(top>boxTop+boxHeight){
+                below=true
+            }
+
+        }
+    }
+    })
+    upArrow.style.display= above?"block": "none";
+        downArrow.style.display= below?"block": "none";
+
 }
 
 function updatePizzaStack(){
@@ -166,6 +199,7 @@ milestoneList.forEach(milestone=>{
         milestone.effect()
         updateUI()
         updateMilestoneUI()
+        milestoneArrows()
         
     })
 
@@ -258,7 +292,7 @@ const milestoneUpgradeList=[
         growth: 20,
         required: ()=> milestoneUpgradeList[0].currentCount>=1,
         effect: ()=> cooldown+=0.05,
-        buff: (count)=>"-"+count*0.05+" seconds"
+        buff: (count)=>"-"+(count*0.05).toFixed(2)+" seconds"
     },
     {
         id: '2',
@@ -266,12 +300,12 @@ const milestoneUpgradeList=[
         info: 'Increase pizzas eaten per pizza by +1 per Upgrade',
         price: 45,
         basePrice:50,
-        maxCount: 4,
+        maxCount: 3,
         currentCount: 0,
-        growth: 15,
+        growth: 25,
         required: ()=> milestoneUpgradeList[0].currentCount>=1,
         effect: ()=> pizzasEatenMultiplier+=1,
-        buff: (count)=>"+"+count+" Cpc"
+        buff: (count)=>"+"+count+"/pizza"
     },
   
     {
@@ -311,20 +345,20 @@ const milestoneUpgradeList=[
         growth: 25,
         required: ()=> (milestoneUpgradeList[3].currentCount>=1 || milestoneUpgradeList[4].currentCount>=1),
         effect: ()=> pizzaPassiveAdd+=3,
-        buff: (count)=>"+"+count*3+"/s"
+        buff: (count)=>"+"+count*3+" Pizza Coins/s"
     },
     {
-        id: '5',
-        title: 'Milestone Upgrade 1',
-        info: 'Longer text',
+        id: '6',
+        title: 'Yummy Yummy Pizzy',
+        info: 'Pizza so Yummy it gives you +2 pizza eaten per pizza',
         price: 200,
         basePrice:200,
-        maxCount: 1,
+        maxCount: 3,
         currentCount: 0,
         growth: 0,
-        required: ()=> pizzaBoxCoins>=0,
-        effect: ()=> score*=10,
-        buff: (count)=>"+"+count+" Cpc"
+        required: ()=> milestoneUpgradeList[2].currentCount>=3,
+        effect: ()=> pizzasEatenMultiplier+=2,
+        buff: (count)=>"+"+count*2+"/Pizza"
     },
     
 ]
@@ -388,7 +422,7 @@ const milestoneList =[
     id:"4",
     title:'Pizza V',
     requirement: 1000,
-    info: "Reach 1000 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>5x Pizzas<br>3x Bonus Pizza<b>Power +0.05</b>",
+    info: "Reach 1000 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>5x Pizzas<br>3x Bonus Pizza<br><b>+0.05 Power</b>",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=12;

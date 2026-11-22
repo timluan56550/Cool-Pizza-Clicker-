@@ -39,10 +39,10 @@ refreshing2 =setTimeout(()=>{
 
 
 //PIZZA 
-let score=1000000;
-// let score=0;
+// let score=1000000;
+let score=0;
 
-let amountPerClick=50000;
+let amountPerClick=1;
 let multiplier=1;
 let slicesEaten=0;
 let pizzasEaten=0;
@@ -124,6 +124,8 @@ const coinGrid=document.getElementById("pizza-grid")
 const coinDisplay=document.getElementById("pizzaCoinsDisplay")
 const pizzaBoxCoinsDisplay=document.getElementById("pizzaBoxCoinsDisplay")
 const pizzasEatenDisplay=document.getElementById("pizzasEatenDisplay")
+ const upArrow=document.getElementById("arrow-up")
+const downArrow=document.getElementById("arrow-down")
 function calculateGain(multi=1){
         const upgrade12=upgradeList.find(upgrade=>upgrade.id==="12")
     const upgrade14=upgradeList.find(upgrade=>upgrade.id==="14")

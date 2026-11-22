@@ -35,7 +35,8 @@ function openTabs(){
             milestoneGrid.style.display="none";
             pizzaBoxCoinsDisplay.style.display="none"
             pizzasEatenDisplay.style.display="none"
-
+            upArrow.style.display="none"
+            downArrow.style.display="none"
             tab.clicked()
             openTabs()
 
@@ -71,13 +72,12 @@ const tabButtons=[
     // currentRebirthIndex>=2
         id: "milestones",
         title:"Milestones",
-        unlocked: ()=>true,
+        unlocked: ()=>currentRebirthIndex>=2,
         clicked: ()=>{
             milestoneGrid.style.display="flex"
             milestoneBar.style.display="block"
             pizzaBoxCoinsDisplay.style.display="flex"
             pizzasEatenDisplay.style.display="flex"
-
             openMilestone()
         }
     },

@@ -787,3 +787,35 @@ flex-shrink: 0;
       align-items: center;
 
 }
+
+  
+.arrow{
+position:absolute;
+height:20px;
+width:20px;
+pointer-events: none;
+animation: bounce 0.4s infinite alternate;
+border-right: 3px solid white;
+    border-bottom: 3px solid white;
+     filter: drop-shadow(0 0 5px gold)
+}
+@keyframes bounce{
+0% {
+    transform: translate(0, 0);
+}
+100% {
+    transform:translate(-3px, -3px);
+}
+}
+#arrow-up{
+top: 60%;
+left:32%;
+
+rotate: -135deg
+}
+#arrow-down{
+bottom: 15%;
+left:32%;
+rotate: 45deg;
+
+}

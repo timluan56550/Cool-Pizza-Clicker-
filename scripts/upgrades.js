@@ -12,7 +12,7 @@ function openUpgrade(){
         upgradeButton.className=`upgrade-button ${maxed ? 'maxed' : ''}`;
         upgradeButton.innerHTML=  
             "<b>"+upgrade.title+"</b>"+
-            "<span> Cost: "+ format.format(upgrade.price) + "</span>" +
+            "<span> Cost: "+ numberFormat(upgrade.price) + "</span>" +
             "<div id='LevelandBuff'>"+
             "<span> Level: "+ upgrade.currentCount + "/" + upgrade.maxCount+ "</span>"+
             "<span style='color: green;'>"+totalBuff(upgrade)+"</span>"+
@@ -343,6 +343,38 @@ required: ()=>currentRebirthIndex>=3&&upgradeList[11].currentCount>=3,
 effect: ()=>{ doubleBakedChance+=0.05
 },
 buff: (count)=>count*5+"%"
+
+
+},
+{
+id: '15',
+title: 'Pizza Delivery',
+info:'Increase Pizza Eaten gain by +3 per upgrade' ,
+price: 80000000000000,
+basePrice:80000000000000,
+maxCount: 4,
+currentCount: 0,
+growth: 1.9,
+required: ()=>currentRebirthIndex>=3&&upgradeList[14].currentCount>=3,
+effect: ()=>{pizzasEatenMultiplier+=3
+},
+buff: (count)=>"+"+count*3+"/Pizza"
+
+
+},
+{
+id: '16',
+title: 'Pizza Empire',
+info:'Multiply pizza gain by 1.1 per upgrade' ,
+price: 100000000000000,
+basePrice:100000000000000,
+maxCount: 25,
+currentCount: 0,
+growth: 1.12,
+required: ()=>currentRebirthIndex>=4&&upgradeList[14].currentCount>=3,
+effect: ()=>{multiplier*1.1
+},
+buff: (count)=>"x"+Math.pow(1.1, count).toFixed(2)
 
 
 },
