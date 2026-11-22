@@ -67,11 +67,15 @@ function openMilestone(){
    
     
     //makes it so you start at teh bottom and continue every time the ufnction runs
-    if(scroll===0){
-    milestoneBar.scrollTop=milestoneBar.scrollHeight
-    }else{
-        milestoneBar.scrollTop=scroll
-    }
+    //also makes it smooth going downawards
+    if(scroll === 0){ 
+        milestoneBar.scrollTo({
+        top: milestoneBar.scrollHeight,
+        behavior: 'smooth' });
+         } else { 
+        milestoneBar.scrollTo({ 
+        top: scroll, behavior: 'smooth' });
+     }
 }
 
 function updatePizzaStack(){
@@ -233,7 +237,7 @@ const milestoneUpgradeList=[
     {
         id: '0',
         title: 'Double Slicer',
-        info: 'Eat 2 slices instead of 1 every click!',
+        info: 'Eat 2 slices instead of 1 every click',
         price: 15,
         basePrice:15,
         maxCount: 1,
@@ -298,16 +302,16 @@ const milestoneUpgradeList=[
     },
     {
          id: '5',
-        title: 'Pizza Coin Multiplier',
-        info: '+5 Passive pizza coins per upgrade',
+        title: 'More Pizza Coin',
+        info: '+3 Passive pizza coins per upgrade',
         price: 10,
         basePrice:100,
         maxCount: 4,
         currentCount: 0,
         growth: 25,
         required: ()=> (milestoneUpgradeList[3].currentCount>=1 || milestoneUpgradeList[4].currentCount>=1),
-        effect: ()=> pizzaPassiveAdd+=5,
-        buff: (count)=>"+"+count*5+" per Second"
+        effect: ()=> pizzaPassiveAdd+=3,
+        buff: (count)=>"+"+count*3+"/s"
     },
     {
         id: '5',
@@ -322,32 +326,7 @@ const milestoneUpgradeList=[
         effect: ()=> score*=10,
         buff: (count)=>"+"+count+" Cpc"
     },
-    {
-        id: '0',
-        title: 'Milestone Upgrade 1',
-        info: 'Longer text',
-        price: 20,
-        basePrice:20,
-        maxCount: 5,
-        currentCount: 0,
-        growth: 1.8,
-        required: ()=> pizzaBoxCoins>=0,
-        effect: ()=> score*=10,
-        buff: (count)=>"+"+count+" Cpc"
-    },
-    {
-        id: '0',
-        title: 'Milestone Upgrade 1',
-        info: 'Longer text',
-        price: 20,
-        basePrice:20,
-        maxCount: 5,
-        currentCount: 0,
-        growth: 1.8,
-        required: ()=> pizzaBoxCoins>=0,
-        effect: ()=> score*=10,
-        buff: (count)=>"+"+count+" Cpc"
-    },
+    
 ]
 
 
@@ -374,114 +353,109 @@ const milestoneList =[
     id:"1",
     title:'Pizza II',
     requirement: 125,
-    info: "Reach 125 Pizza Eaten.<br>Bonuses: <br>2 Passive Pizza Box Coin.<br>2x Pizzas<br>1.5x Pizza Coins",
+    info: "Reach 125 Pizza Eaten.<br>Bonuses: <br>2 Passive Pizza Box Coin.<br>2x Pizzas",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=1;
         milestoneMultiplier=2
-        pizzaCoinMultiplier=1.5
     }
     },
     {
     id:"2",
     title:'Pizza III',
     requirement: 250,
-    info: "Reach 250 Pizza Eaten.<br>Bonuses: <br>4 Passive Pizza Box Coin.<br>3x Pizzas<br>2x Pizza Coins",
+    info: "Reach 250 Pizza Eaten.<br>Bonuses: <br>4 Passive Pizza Box Coin.<br>3x Pizzas",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=2;
         milestoneMultiplier=3
-        pizzaCoinMultiplier=2
-    }
+           }
     },
      {
     id:"3",
     title:'Pizza IV',
     requirement: 500,
-    info: "Reach 500 Pizza Eaten.<br>Bonuses: <br>8 Passive Pizza Box Coin.<br>4x Pizzas<br>2x Bonus Pizza<br>2.5x Pizza Coins<br>",
+    info: "Reach 500 Pizza Eaten.<br>Bonuses: <br>8 Passive Pizza Box Coin.<br>4x Pizzas<br>2x Bonus Pizza",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=4;
         bonusPizzaMultiplier=2
         milestoneMultiplier=4
-        pizzaCoinMultiplier=2.5
+        
     }
     },
      {
     id:"4",
     title:'Pizza V',
     requirement: 1000,
-    info: "Reach 1000 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>5x Pizzas<br>3x Bonus Pizza<br>3x Pizza Coins<br><b>Power +0.05</b>",
+    info: "Reach 1000 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>5x Pizzas<br>3x Bonus Pizza<b>Power +0.05</b>",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=12;
         bonusPizzaMultiplier=3
         milestoneMultiplier=5
-        pizzaCoinMultiplier=3
-        powerGain+=0.05
+               powerGain+=0.05
     }
     },
     {
     id:"5",
     title:'Pizza VI',
     requirement: 2000,
-    info: "Reach 2000 Pizza Eaten.<br>Bonuses: <br>40 Passive Pizza Box Coin.<br>6.5x Pizzas<br>4x Bonus Pizza<br>3.5x Pizza Coins",
+    info: "Reach 2000 Pizza Eaten.<br>Bonuses: <br>40 Passive Pizza Box Coin.<br>6.5x Pizzas<br>4x Bonus Pizza",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=20;
         bonusPizzaMultiplier=4
         milestoneMultiplier=6.5
-        pizzaCoinMultiplier=3.5
+        
     }
     },
     {
     id:"6",
     title:'Pizza VII',
     requirement: 3500,
-    info: "Reach 3500 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>8x Pizzas<br>5x Bonus Pizza<br>4x Pizza Coins",
+    info: "Reach 3500 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>8x Pizzas<br>5x Bonus Pizza",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=12;
         bonusPizzaMultiplier=5
         milestoneMultiplier=8
-        pizzaCoinMultiplier=4
-    }
+           }
     },{
     id:"7",
     title:'Pizza VIII',
     requirement: 5000,
-    info: "Reach 5000 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>10x Pizzas<br>6x Bonus Pizza<br>4.5x Pizza Coins",
+    info: "Reach 5000 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>10x Pizzas<br>6x Bonus Pizza",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=12;
         bonusPizzaMultiplier=6
         milestoneMultiplier=10
-        pizzaCoinMultiplier=4.5
+        
 
     }
     },{
     id:"8",
     title:'Pizza IX',
     requirement: 7000,
-    info: "Reach 7000 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>12x Pizzas<br>7x Bonus Pizza<br>5x Pizza Coins",
+    info: "Reach 7000 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>12x Pizzas<br>7x Bonus Pizza",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=12;
         bonusPizzaMultiplier=7
         milestoneMultiplier=12
-        pizzaCoinMultiplier=5
-    }
+           }
     },{
     id:"9",
     title:'Pizza X',
     requirement: 10000,
-    info: "Reach 10000 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>15x Pizzas<br>8x Bonus Pizza<br>5.5x Pizza Coins",
+    info: "Reach 10000 Pizza Eaten.<br>Bonuses: <br>20 Passive Pizza Box Coin.<br>15x Pizzas<br>8x Bonus Pizza",
     claimed: false,
     effect: ()=>{
         passivePizzaBoxCoins+=12;
         bonusPizzaMultiplier=8
         milestoneMultiplier=15
-        pizzaCoinMultiplier=5.5
+        
     }
     },
 

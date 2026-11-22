@@ -419,7 +419,7 @@ border: 2px solid rgb(88, 39, 100);
 border-radius: 4px;
 padding: 8px 8px;
 /* cqw Container query width( based of its container) remember to fix this because i dont think it works, i still dont udnerstand watch a tutorial later*/
-font-size:clamp(5px, 5cqmin,13px);
+font-size:clamp(5px, 6cqmin,20px);
 font-family: "Press Start 2P", monospace;
 width:100%;
 max-width: 100%;
@@ -579,6 +579,7 @@ border: 3px outset black;
 border-radius: 14px;
 overflow-y: auto;
 overflow-x: hidden;
+scroll-behavior: smooth;
 }
 
 
@@ -752,26 +753,37 @@ flex-shrink: 0;
 
 #pizzaBoxCoinsDisplay{
     position: absolute;
-    top: 55.7%;
+    top: 55%;
     left: 16%;
     right: 16%;
+        line-height: 1.4em;
+
     text-align: center;
-    font-size: clamp(4px, 2cqmin,14px);
+    font-size: clamp(4px, 1.6cqmin,20px);
     font-family: "Press Start 2P";
     pointer-events: none;
+    display: flex; 
+     flex-direction:column;
+     justify-content: center;
+      align-items: center;
 }
 #pizzasEatenDisplay{
     position: absolute;
     top: 86%;
     left: 16%;
     right: 43%;
+    bottom: 11%;
     line-height: 1.4em;
     text-align: center;
-    font-size: clamp(4px, 1.5cqmin,14px);
+    font-size: clamp(4px, 1.2cqmin,14px);
     font-family: "Press Start 2P";
      background-color: rgba(255, 255, 255, 0.35);
      padding: 2px;
     border-radius: 4px;
         pointer-events: none;
+     display: flex; 
+     flex-direction:column;
+     justify-content: center;
+      align-items: center;
 
 }

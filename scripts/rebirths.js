@@ -18,22 +18,16 @@ function openRebirth(){
         grid.appendChild(completionMessage);
         return;
     }
-    let preview=0
-    const cap=10000000000
-    if(score<=cap){
-    preview =score>=1000000?("+"+(25*Math.sqrt(score/1000000)).toFixed(2)):"Reach amount to Rebirth"
-    }else{
-    const baseAtCap = 25 * Math.sqrt(cap / 1000000); 
-    const excessRatio = score / cap;
-    preview = "+"+(baseAtCap * Math.pow(excessRatio, 0.2)).toFixed(2);
-    }
+    const preview=calcPizzaCoins(score, currentRebirth.target, false, currentRebirth.price)
+
+   
     const rebirthButton=document.createElement("div");
 
     rebirthButton.className="rebirth-button";
     rebirthButton.innerHTML=
     "<b>"+currentRebirth.title+"</b>"+
     "<span> Cost: "+ format.format(currentRebirth.price) + "</span>" +
-   "<span> "+preview+" Pizza Coins"+"</span>"
+   "<span>"+preview+"</span>"
     rebirthButton.addEventListener("click",()=>{
         if(score>=currentRebirth.price){
             soundClick();
@@ -43,7 +37,7 @@ function openRebirth(){
                 return;
             }
             // base is 20, every 10x score gives you +20 currency
-            let bonusCoins=(25*Math.sqrt(score/1000000))
+            let bonusCoins=calcPizzaCoins(score, currentRebirth.target, true, currentRebirth.price)
             pizzaCoins+=bonusCoins*pizzaCoinMultiplier
 
             //every time you milstone reset, multiply passive by 2 base is 1
@@ -77,6 +71,18 @@ rebirthButton.addEventListener("mouseleave", ()=>{
     })
     grid.appendChild(rebirthButton);
 }
+function calcPizzaCoins(score, target, onlyNumber, price){
+    if (score<price){
+        return "Reach amount to Rebirth"
+    }
+    //0.6 is the max 0.17 is the half way
+    let total =target+target*(0.6*(Math.log10(score/price)/(Math.log10(score/price)+0.18))) 
+    if(onlyNumber){
+        return total
+    }else{
+    return "+"+format.format(total)+" Pizza Coins"
+    }
+}
 
 
 function rebirth(){
@@ -85,7 +91,7 @@ function rebirth(){
             amountPerClick=1;
             combo=0;
             multiplier=1;
-            // isComboLocked=false;
+            isComboLocked=false;
             critChance=0;
             slicesEaten=0;
             isCooldown=false;
@@ -104,7 +110,7 @@ function rebirth(){
             clearInterval(autoComboTimer)
             targetImage.style.display="none"
             lockCombo.style.display="none"
-            // lockCombo.src="images/unlock.png";
+            lockCombo.src="images/unlock.png";
 
             
 }
@@ -281,49 +287,51 @@ function startAutoUpgrade(){
 const rebirthList= [
     {
         title:'First Rebirth',
-        info:'Resets your progress.<br>Bonuses: <br>1.5x CpC <br>1.5x Bonus Pizza <br>1.5x Crits <br>5% Crit chance <br>+1 Passive Pizza Coin Per Sec',
+        info:'Resets your progress.<br>Bonuses: <br>1.5x CpC <br>1.5x Bonus Pizza <br>1.25x Crits <br>3% Crit chance <br>+1 Passive Pizza Coin Per Sec',
         price: 1000000,
+        target:15,
         effect: ()=>{
             amountPerClick*=1.5;
             bonusPizza*=1.5;
-            critGainMultiplier*=1.5;
-            critChance+=0.05;
+            critGainMultiplier*=1.25;
+            critChance+=0.03;
         }
     },
       {
         title:'Second Rebirth',
-        info:'Resets your progress. <br>Bonuses: 2.5x CpC<br>2.5x Bonus Pizza<br>2.5x Crits<br>5% Crit chance<br>+2 Passive Pizza Coin Per Sec<br><b>UNLOCK MILESTONES<b> ',
+        info:'Resets your progress. <br>Bonuses: 2.5x CpC<br>2.5x Bonus Pizza<br>1.5x Crits<br>5% Crit chance<br>+2 Passive Pizza Coin Per Sec<br><b>UNLOCK MILESTONES<b> ',
         price: 100000000,
-
+        target: 250,
         effect: ()=>{
             amountPerClick*=2.5;
             bonusPizza*=2.5;
-            critGainMultiplier*=2.5;
+            critGainMultiplier*=1.5;
             critChance+=0.05;
         }
     },
      {
         title:'Third Rebirth',
-        info:'Resets your progress. Bonuses: 5x CpC, 4x Bonus Pizza, 4x Crits, 10% Crit chance <br>+4 Passive Pizza Coin Per Sec',
+        info:'Resets your progress. Bonuses: 5x CpC, 4x Bonus Pizza, 2x Crits, 7% Crit chance <br>+4 Passive Pizza Coin Per Sec',
         price: 50000000000,
-
+target: 600,
         effect: ()=>{
             amountPerClick*=5;
             bonusPizza*=4;
-            critGainMultiplier*=4;
-            critChance+=0.1;
+            critGainMultiplier*=2;
+            critChance+=0.07;
         }
     },
     {
         title:'Fourth Rebirth',
-        info:'Resets your progress. Bonuses: 8x CpC, 6x Bonus Pizza, 6x Crits, 15% Crit chance <br>+8 Passive Pizza Coin Per Sec',
+        info:'Resets your progress. Bonuses: 8x CpC, 6x Bonus Pizza, 3x Crits, 10% Crit chance <br>+8 Passive Pizza Coin Per Sec',
         price: 25000000000000,
+        target: 1000,
 
         effect: ()=>{
             amountPerClick*=8;
             bonusPizza*=6;
-            critGainMultiplier*=6;
-            critChance+=0.15;
+            critGainMultiplier*=3;
+            critChance+=0.1;
         }
     },
 ]

@@ -39,10 +39,10 @@ refreshing2 =setTimeout(()=>{
 
 
 //PIZZA 
-// let score=1000000;
-let score=0;
+let score=1000000;
+// let score=0;
 
-let amountPerClick=1;
+let amountPerClick=50000;
 let multiplier=1;
 let slicesEaten=0;
 let pizzasEaten=0;
@@ -496,13 +496,13 @@ if(multiplierDisplay){
     multiplierDisplay.textContent=multiplier.toFixed(2);
 }
 if(coinDisplay){
-    coinDisplay.textContent="Pizza Coins:"+(pizzaCoins.toFixed(2));
+    coinDisplay.textContent="Pizza Coins:"+format.format(pizzaCoins);
 }
 if(pizzaBoxCoinsDisplay){
-    pizzaBoxCoinsDisplay.textContent="Pizza Box Coins: "+format.format(pizzaBoxCoins)
+    pizzaBoxCoinsDisplay.innerHTML="Pizza Box Coins:<br>"+format.format(pizzaBoxCoins)
 }
 if(pizzasEatenDisplay){
-    pizzasEatenDisplay.textContent="Pizzas Eaten "+pizzasEaten
+    pizzasEatenDisplay.innerHTML="Pizzas Eaten:<br>"+formatShort.format(pizzasEaten)
 }
 //idk a better way to write this
 if(document.getElementById("milestone-bar").style.display !=="none"&& typeof updateMilestoneUI === "function"){
